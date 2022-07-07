@@ -1,17 +1,16 @@
 //前端路由
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import test1 from '../views/test1.vue'
+import home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'test1',
-    component: test1
-  },
+    name: 'home',
+    component: home
+  }/*,
   {
     path: '/1',
     name: 'Home',
@@ -23,7 +22,7 @@ const routes = [
         component: test1
       }
     ]
-  }
+  }*/
 ]
 
 const router = new VueRouter({
