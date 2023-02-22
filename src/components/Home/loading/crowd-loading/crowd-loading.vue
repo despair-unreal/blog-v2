@@ -40,7 +40,6 @@ function getAllPeople() {
   const sh = img.naturalHeight / rows;
 
   const people = [];
-
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const sx = col * sw;
@@ -68,9 +67,10 @@ function animPerson() {
   crowd.push(person);
   // 从上到下渲染，避免错乱
   crowd.sort((a, b) => a.anchorY - b.anchorY);
+  return person;
 }
 function startHandle() {
-  availablePeople.push(...allPeople);
+  availablePeople = [...that.$utils.objDeepClone(allPeople)];
   [...availablePeople].forEach(() => {
     animPerson();
   });
@@ -78,28 +78,28 @@ function startHandle() {
 
 function resize() {
   that.$parent.initStageAndDpr(ctx, dpr, canvas, stage);
-
   // 重置人群
   crowd.forEach((person) => person.kill());
   availablePeople.length = 0;
   crowd.length = 0;
-  
+
   startHandle();
 }
 
 function render() {
   ctx.clearRect(0, 0, stage.width, stage.height);
-  that.$parent.initBackground(bgImg,ctx,stage);
+  that.$parent.drawFullImg(bgImg,ctx,stage);
   crowd.forEach((person) => person.render(ctx));
   requestAnimationFrame(render);
 }
 
 async function init() {
   const bgSrc = crowdBackground;
-  img = await that.$utils.loadImg(config.src);
-  bgImg = await that.$utils.loadImg(bgSrc);
+  [{value:img},{value:bgImg}] = await Promise.allSettled([
+    that.$utils.loadImg(config.src),
+    that.$utils.loadImg(bgSrc)
+  ])
   allPeople = getAllPeople();
-  availablePeople.push(...allPeople);
   resize();
   
   window.addEventListener("resize", resize);

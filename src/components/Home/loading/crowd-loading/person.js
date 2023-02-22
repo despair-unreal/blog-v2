@@ -4,7 +4,7 @@ export class Person {
      * 
      * @param {Array} drawArgs [img, sx, sy, sw, sh, dx, dy, dw, dh]
      */
-    constructor(drawArgs) {
+    constructor(drawArgs = []) {
         this.drawArgs = drawArgs
         this.width = drawArgs[3]
         this.height = drawArgs[4]
@@ -92,8 +92,8 @@ export class Person {
     kill() {
         let activeInstances = anime.running;
         [this.animeX, this.animeY].forEach(anim => {
-            const index = activeInstances.indexOf(anim, 1)
-            index > -1 && activeInstances.splice(index, 1)
+            const index = activeInstances.indexOf(anim, 1);
+            index > -1 && activeInstances.splice(index, 1);
         })
     }
 }

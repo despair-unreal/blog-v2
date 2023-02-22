@@ -27,11 +27,10 @@ async function init() {
   const resize = that.$parent.initStageAndDpr(ctx, dpr, canvas, stage);
   window.addEventListener("resize", resize);
 
-  //that.$parent.initBackground(bgImg, ctx, stage);
-  drawCircle();
+  render();
 }
 
-function drawCircle() {
+function render() {
   //当圆的直径等于矩形的对角线长度，则圆刚好可以覆盖矩形
   //利用勾股定理求出stage的对角线长度
   const d = Math.sqrt(Math.pow(stage.width, 2) + Math.pow(stage.height, 2));
@@ -40,7 +39,7 @@ function drawCircle() {
   ctx.beginPath();
   ctx.arc(stage.width / 2, stage.height / 2, r, 0, 2 * Math.PI);
   ctx.clip();
-  that.$parent.initBackground(bgImg, ctx, stage);
+  that.$parent.drawFullImg(bgImg, ctx, stage);
   /* ctx.fillStyle = "rgba(255,255,255,0.6)";
   ctx.fillRect(0, 0, stage.width, stage.height); */
   ctx.restore();

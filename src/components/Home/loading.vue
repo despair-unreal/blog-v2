@@ -17,7 +17,7 @@ export default {
     crowdLoading,
   },
   methods: {
-    initBackground: (bgImg, ctx, stage) => {
+    drawFullImg: (bgImg, ctx, stage) => {
       //ctx.drawImage(bgImg,stage.width,stage.width);
       const width = bgImg.naturalWidth;
       const height = bgImg.naturalHeight;
