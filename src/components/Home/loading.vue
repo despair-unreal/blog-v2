@@ -8,7 +8,7 @@
 
 <script>
 import crowdLoading from "./loading/crowd-loading/crowd-loading.vue";
-import crowdmask from "./loading/crowd-mask.vue";
+import crowdmask from "./loading/crowd-mask/crowd-mask.vue";
 
 export default {
   name: "loading",
