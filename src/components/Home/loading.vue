@@ -1,8 +1,7 @@
 <template>
-  <!--<crowd :config="config"></crowd>-->
   <div>
-    <crowdLoading></crowdLoading>
-    <crowdmask></crowdmask>
+    <crowdLoading ref="crowdLoading" @overLoading="overLoading"></crowdLoading>
+    <crowdmask ref="crowdMask" @overLoading="overLoading"></crowdmask>
   </div>
 </template>
 
@@ -16,9 +15,19 @@ export default {
     crowdmask,
     crowdLoading,
   },
+  data() {
+    return {
+      overLoadingcount: 0,
+    };
+  },
+  activated(){
+    if (this.overLoadingcount === 2){
+      this.$refs.crowdMask.closeMask();
+      this.$emit("overLoading");
+    } 
+  },
   methods: {
     drawFullImg: (bgImg, ctx, stage) => {
-      //ctx.drawImage(bgImg,stage.width,stage.width);
       const width = bgImg.naturalWidth;
       const height = bgImg.naturalHeight;
       ctx.drawImage(
@@ -41,6 +50,10 @@ export default {
       canvas.width = stage.width * dpr;
       canvas.height = stage.height * dpr;
       ctx.scale(dpr, dpr);
+    },
+    overLoading: function () {
+      this.overLoadingcount++;
+      if (this.overLoadingcount === 2) this.$emit("overLoading");
     },
   },
 };

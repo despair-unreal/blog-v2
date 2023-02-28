@@ -11,7 +11,7 @@ export class Circle {
         targets: this,
         radius: [this.startR, this.endR],
         easing: "linear",
-        duration: 800,
+        duration: 1000,
         complete: onComplete,
       });
     }

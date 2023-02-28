@@ -1,4 +1,5 @@
 export default {
+    //加载图片
     loadImg: function (src) {
         return new Promise((resolve) => {
             const img = new Image();
@@ -6,6 +7,7 @@ export default {
             img.src = src;
         });
     },
+    //深拷贝
     objDeepClone: function (obj) {
         if (obj === null) return null
         if (typeof obj !== 'object') return obj;
@@ -27,5 +29,26 @@ export default {
             }
         }
         return newObj;
+    },
+    //判断鼠标滚轮方向
+    mouseWheelDirection: function (event) {
+        let direction = event.wheelDelta > 0 ? "Up" : "Down";
+        return direction;
+    },
+    whichTransitionEvent: function () {
+        const el = document.createElement("fakeElement");
+        //存储对应的事件名
+        const transitions = {
+            'transition': 'transitionend',
+            'OTransition': 'oTransitionEnd',
+            'MozTransition': 'transitionend',
+            'WebkitTransition': 'webkitTransitionEnd',
+            'MsTransition': 'msTransitionEnd'
+        }
+        //检测支持何种形式的transitionend事件
+        for(let i in transitions){
+            if(el.style[i] !== undefined)
+                return transitions[i];
+        }
     }
 }

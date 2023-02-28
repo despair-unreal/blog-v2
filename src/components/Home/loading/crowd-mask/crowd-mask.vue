@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="canvas"></canvas>
+  <canvas id="crowdMask"></canvas>
 </template>
 
 <script>
@@ -14,25 +14,36 @@ export default {
   mounted: function () {
     this.$nextTick(() => {
       that = this;
-      canvas = this.$refs.canvas;
+      canvas = document.querySelector("#crowdMask");
       ctx = canvas.getContext("2d");
-      init();
+      
+      init().then(()=>{
+        this.$emit("overLoading");
+      })
     });
   },
+  methods:{
+    openMask:function(){
+      drawCircle(false);
+    },
+    closeMask:function(){
+      drawCircle(true);
+    }
+  }
 };
-let maskCircle, renderId;
+let maskCircle;
 async function init() {
   bgImg = await that.$utils.loadImg(bg);
 
   const resize = that.$parent.initStageAndDpr(ctx, dpr, canvas, stage);
   window.addEventListener("resize", resize);
-
+  
   drawCircle(true);
 }
 function render() {
   ctx.clearRect(0, 0, stage.width, stage.height);
   maskCircle.render(stage, ctx, that, bgImg);
-  renderId = requestAnimationFrame(render);
+  requestAnimationFrame(render);
 }
 function drawCircle(intoLoadingFlag) {
   //当圆的直径等于矩形的对角线长度，则圆刚好可以覆盖矩形
@@ -50,7 +61,7 @@ function drawCircle(intoLoadingFlag) {
   }
   
   maskCircle = new Circle(startR, endR);
-  maskCircle.setAnime(() => cancelAnimationFrame(renderId));
+  maskCircle.setAnime();
   render();
 }
 

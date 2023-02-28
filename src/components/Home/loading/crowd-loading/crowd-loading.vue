@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="crowdLoading" class="c"></canvas>
+  <canvas id="crowdLoading"></canvas>
 </template>
 
 <script>
@@ -16,9 +16,11 @@ export default {
   mounted: function () {
     this.$nextTick(() => {
       that = this;
-      canvas = this.$refs.crowdLoading;
+      canvas = document.querySelector("#crowdLoading");
       ctx = canvas.getContext("2d");
       init();
+
+      this.$emit("overLoading");
     });
   },
 };

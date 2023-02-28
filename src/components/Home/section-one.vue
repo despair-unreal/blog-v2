@@ -62,7 +62,8 @@ export default {
       sentenceGermanShow: false,
       authorChineseShow: false,
       authorGermanShow: false,
-      scrollShow: false
+      scrollShow: false,
+      overLoadingFlag:false
     };
   },
   props: {},
@@ -140,7 +141,11 @@ export default {
     //本页加载完成
     scrollAfterEnter: function () {
       this.$emit("overLoading");
+      this.overLoadingFlag = true;
     }
+  },
+  activated(){
+    if (this.overLoadingFlag) this.$emit("overLoading");
   },
   mounted: function () {
     this.sentenceChinese = this.splitSentence(
