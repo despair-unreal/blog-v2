@@ -1,5 +1,5 @@
 <template>
-  <div id="home" @mousewheel="changeView">
+  <div id="home">
     <transition
       name="component-transition"
       mode="out-in"
@@ -10,6 +10,7 @@
         <component
           :is="componentArr[currentIndex]"
           @overLoading="overLoading"
+           @mousewheel="changeView"
           ref="father"
         ></component>
       </keep-alive>
