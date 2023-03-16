@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div id="home" @mousewheel="changeView">
     <transition
       name="component-transition"
       mode="out-in"
@@ -10,7 +10,6 @@
         <component
           :is="componentArr[currentIndex]"
           @overLoading="overLoading"
-           @mousewheel="changeView"
           ref="father"
         ></component>
       </keep-alive>
@@ -20,18 +19,20 @@
 
 <script>
 import sectionOne from "../components/Home/section-one.vue";
-import loading from "../components/Home/loading.vue";
+import loading from "../components/Home/loading/loading.vue";
+import spaceCamping from '../components/Home/space-camping/space-camping.vue';
 
 export default {
   name: "home",
   components: {
     sectionOne,
     loading,
+    spaceCamping
   },
   data() {
     return {
       currentIndex: 0,
-      componentArr: ["sectionOne", "loading", ""],
+      componentArr: ["spaceCamping","sectionOne", "loading" ],
       changeViewFlag: true,
       loadingCompletedFlag: false
     };
@@ -62,18 +63,15 @@ export default {
       //当前组件页加载完成才能切换组件页
       if (this.loadingCompletedFlag && this.changeViewFlag) {
         //切换组件页
-
         let direction = this.$utils.mouseWheelDirection(event);
         switch (direction) {
           case "Down":
-            if (this.currentIndex != this.componentArr.length - 1) {
+            if (this.currentIndex != this.componentArr.length - 1)
               this.currentIndex += 1;
-            }
             break;
           case "Up":
-            if (this.currentIndex != 0) {
+            if (this.currentIndex != 0)
               this.currentIndex -= 1;
-            }
             break;
         }
       }
@@ -83,14 +81,16 @@ export default {
 </script>
 <style scoped>
 #home > * {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
+  /* overflow: hidden; */
 }
 #home {
-  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
   background-image: url("~@/assets/images/bg.png");
   background-size: 100% 100%;
-  font-size: calc(100vw / 120);
+  overflow: hidden;
 }
 .component-transition-leave,
 .component-transition-enter-to {
