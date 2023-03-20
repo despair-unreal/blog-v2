@@ -17,6 +17,7 @@ export class CreateModel {
         this.camera = null;
         this.renderer = null;
         this.controls = null;
+        this.renderCompileFlag = false;
 
         this.clock = new THREE.Clock();
         this.mixer = null;
@@ -206,6 +207,9 @@ export class CreateModel {
                 this.mixer = this.setAnimation(gltf);
                 //把模型添加进场景
                 this.scene.add(models);
+                //预编译场景
+                this.renderer.compile(this.scene,this.camera);
+                this.renderCompileFlag = true;
             },
             // called while loading is progressing
             function (xhr) {
@@ -362,21 +366,23 @@ export class CreateModel {
             const deltaSeconds = this.clock.getDelta()
             this.mixer.update(deltaSeconds);
         }
-        //局部辉光
-        if (this.useFinalPassFlag) {
-            //非辉光的部分先变黑
-            this.scene.traverse(this.darkenMaterial.bind(this));
-            //渲染辉光合成器
-            this.bloomComposer.render();
-            //还原非辉光的材质
-            this.scene.traverse(this.restoreMaterial.bind(this));
-            //清除深度缓存
-            this.renderer.clearDepth();
-            //渲染最终合成器
-            this.finalComposer.render();
-        } else {
-            this.renderer.clearDepth();
-            this.bloomComposer.render();
+        if(this.renderCompileFlag){
+            //局部辉光
+            if (!this.useFinalPassFlag) {
+                this.renderer.clearDepth();
+                this.bloomComposer.render();
+            } else {
+                //非辉光的部分先变黑
+                this.scene.traverse(this.darkenMaterial.bind(this));
+                //渲染辉光合成器
+                this.bloomComposer.render();
+                //还原非辉光的材质
+                this.scene.traverse(this.restoreMaterial.bind(this));
+                //清除深度缓存
+                this.renderer.clearDepth();
+                //渲染最终合成器
+                this.finalComposer.render();
+            }
         }
         requestAnimationFrame(this.animate.bind(this));
     }

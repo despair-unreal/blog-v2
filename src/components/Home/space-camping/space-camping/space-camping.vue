@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="spaceCamping"></canvas>
+  <canvas class="absoluteFullScreen" ref="spaceCamping"></canvas>
 </template>
 
 <script>
@@ -12,7 +12,9 @@ export default {
   },
   mounted() {
     const canvas = this.$refs.spaceCamping;
-    createModel(canvas);
+    const flag = false;
+    if(flag)
+      createModel(canvas);
     //this.$emit("overLoading");
   },
 };
@@ -73,7 +75,8 @@ function createModel(canvas) {
   createModel.initEffect(unrealBloomPassParams);
 
   //渲染
-  createModel.animate();
+  
+    createModel.animate();
 
   window.addEventListener("resize", createModel.resize.bind(createModel));
 }

@@ -15,12 +15,14 @@ export class Circle {
         complete: onComplete,
       });
     }
-    render(stage, ctx, that, bgImg) {
+    render(stage, ctx, bgImg) {
       ctx.save();
       ctx.beginPath();
       ctx.arc(stage.width / 2, stage.height / 2, this.radius, 0, 2 * Math.PI);
       ctx.clip();
-      that.$parent.drawFullImg(bgImg, ctx, stage);
+      const width = bgImg.naturalWidth;
+      const height = bgImg.naturalHeight;
+      ctx.drawImage(bgImg,0,0,width,height,0,0,stage.width,stage.height);
       ctx.restore();
     }
   }

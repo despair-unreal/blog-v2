@@ -19,34 +19,32 @@
 
 <script>
 import sectionOne from "../components/Home/section-one.vue";
-import loading from "../components/Home/loading/loading.vue";
-import spaceCamping from '../components/Home/space-camping/space-camping.vue';
+import loading from "../components/Home/space-camping/loading.vue";
 
 export default {
   name: "home",
   components: {
     sectionOne,
-    loading,
-    spaceCamping
+    loading
   },
   data() {
     return {
       currentIndex: 0,
-      componentArr: ["spaceCamping","sectionOne", "loading" ],
+      componentArr: [ "sectionOne","loading" ],
       changeViewFlag: true,
       loadingCompletedFlag: false
     };
   },
   watch: {
-    currentIndex: function (newValue,odlValue) {
+    currentIndex: function (/* newValue,odlValue */) {
       this.loadingCompletedFlag = false;
       //第二页（components：loading）要离开前先打开的crow-mask遮罩
-      if(odlValue === 1)
-        this.$refs.father.$refs.crowdMask.openMask();
+      // if(odlValue === 1)
+        // this.$refs.father.$refs.crowdMask.openMask();
     }
   },
   methods: {
-    //组件页加载完成
+    //当前组件页加载完成
     overLoading: function () {
       this.loadingCompletedFlag = true;
     },
@@ -83,7 +81,6 @@ export default {
 #home > * {
   height: 100%;
   width: 100%;
-  /* overflow: hidden; */
 }
 #home {
   height: 100vh;
@@ -100,10 +97,8 @@ export default {
 .component-transition-enter {
   opacity: 0;
 }
-.component-transition-leave-active {
-  transition: all 0.5s linear;
-}
+.component-transition-leave-active,
 .component-transition-enter-active {
-  transition: all 1s linear;
+  transition: all 0.5s linear;
 }
 </style>
