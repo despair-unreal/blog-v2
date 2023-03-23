@@ -18,6 +18,8 @@ export class CreateModel {
         this.renderer = null;
         this.controls = null;
         this.renderCompileFlag = false;
+        this.startRenderFlag = false;
+        this.loaded = 0;
 
         this.clock = new THREE.Clock();
         this.mixer = null;
@@ -212,14 +214,17 @@ export class CreateModel {
                 this.renderCompileFlag = true;
             },
             // called while loading is progressing
-            function (xhr) {
-                console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+            (xhr)=>{
+                this.loaded = (xhr.loaded / xhr.total) * 100;
             },
             // called when loading has errors
             function (error) {
                 console.log(error, "An error happened");
             }
         );
+    }
+    getModelsLoaded(){
+        return this.loaded;
     }
     setAnimation(models) {
         const mixer = new THREE.AnimationMixer(models.scene);
@@ -366,7 +371,7 @@ export class CreateModel {
             const deltaSeconds = this.clock.getDelta()
             this.mixer.update(deltaSeconds);
         }
-        if(this.renderCompileFlag){
+        if(this.renderCompileFlag && this.startRenderFlag){
             //局部辉光
             if (!this.useFinalPassFlag) {
                 this.renderer.clearDepth();

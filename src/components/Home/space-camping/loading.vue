@@ -1,8 +1,8 @@
 <template>
-  <div id="container">
-    <spaceCamping :class="{show:showCrowdLoading}"></spaceCamping>
-    <crowdLoading :class="{show:showCrowdLoading}" ref="crowdLoading" @overLoading="overLoading"></crowdLoading>
-    <crowdmask ref="crowdMask" @overLoading="overLoading"></crowdmask>
+  <div id="container" @mousewheel="stopPropagation">
+    <spaceCamping :start="start"></spaceCamping>
+    <crowdLoading :class="{hide:hideCrowdLoading}" @startRender="startRender" @overLoading="overLoading"></crowdLoading>
+    <crowdmask :class="{hide:hideCrowdMask}" ref="crowdMask" @overLoading="overLoading"></crowdmask>
   </div>
 </template>
 
@@ -22,11 +22,17 @@ export default {
     return {
       crowdMaskFlag :false,
       crowdLoadingFlag :false,
-      showCrowdLoading:false,
-      overLoadingcount: 0,
+      hideCrowdLoading:true,
+      hideCrowdMask:false,
+      start:{startcompile:false,startrender:false},
+      loaded:0
     };
   },
   methods: {
+    stopPropagation:()=>{
+      //阻止向上冒泡
+      event.stopPropagation();
+    },
     initStageAndDpr: (ctx, dpr, canvas, stage) => {
       // 初始化舞台大小
       stage.width = canvas.clientWidth;
@@ -35,6 +41,13 @@ export default {
       canvas.width = stage.width * dpr;
       canvas.height = stage.height * dpr;
       ctx.scale(dpr, dpr);
+    },
+    startRender:function(){
+      //开始渲染模型
+      this.start.startrender = true;
+      setTimeout(() => {
+        this.$refs.crowdMask.openMask();
+      }, 1000);
     },
     overLoading: function (name) {
       let crowdMaskEnd = false;
@@ -51,21 +64,34 @@ export default {
       }
       //两个canvas的第一帧都绘制完毕
       if(this.crowdMaskFlag && this.crowdLoadingFlag){
-        this.showCrowdLoading = true;
+        this.hideCrowdLoading = false;
       }
       //遮罩动画绘制完毕
-      if(crowdMaskEnd && this.showCrowdLoading){
-        this.$emit("overLoading");
+      if(crowdMaskEnd){
+        //模型已经开始渲染
+        if(this.start.startrender){
+          this.hideCrowdLoading = true;
+          this.hideCrowdMask = true;
+          this.$emit("overLoading");
+        }
+        //crowdLoading的第一帧都绘制完毕
+        if(!this.hideCrowdLoading){
+          //开始模型场景等的初始化
+          this.start.startcompile = true;
+        }
       }
     }
   }
 };
 </script>
 <style scoped>
-#container > *:not(:last-child){
-  opacity: 0;
+/* #container{
+  pointer-events:none;
+} */
+#container > *:last-child{
+  transition: all 0.5s linear;
 }
-.show{
-  opacity: 1 !important;
+.hide{
+  opacity: 0 !important;
 }
 </style>

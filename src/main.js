@@ -6,6 +6,7 @@ import utils from './utils/util'
 
 Vue.config.productionTip = false
 Vue.prototype.$utils = utils
+Vue.prototype.$bus = new Vue()
 
 new Vue({
   router,

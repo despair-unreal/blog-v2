@@ -36,11 +36,8 @@ export default {
     };
   },
   watch: {
-    currentIndex: function (/* newValue,odlValue */) {
+    currentIndex: function () {
       this.loadingCompletedFlag = false;
-      //第二页（components：loading）要离开前先打开的crow-mask遮罩
-      // if(odlValue === 1)
-        // this.$refs.father.$refs.crowdMask.openMask();
     }
   },
   methods: {

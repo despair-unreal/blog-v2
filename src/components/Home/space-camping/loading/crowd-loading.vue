@@ -1,11 +1,14 @@
 <template>
+<transition name="container">
   <div id="container">
     <canvas class="absoluteFullScreen" ref="crowdLoading"></canvas>
     <div id="progressBar">
-      <div id="bar"></div>
-      <p>加载中：100%</p>
+      <div class="bar"></div>
+      <div class="loadedBar"></div>
+      <p>加载中：{{showLoaded}}%</p>
     </div>
   </div>
+  </transition>
 </template>
 
 <script>
@@ -14,6 +17,44 @@ import { Person } from "./person.js";
 import crowdImg from "@/assets/images/crowd-loading/crowd-big.png";
 
 export default {
+  created(){
+    //接收模型加载进度
+    this.$bus.$on('loaded', res=>{this.loaded = res});
+  },
+  watch:{
+    loaded:function(newValue,odlValue){
+      //滚动的加载进度数字
+      const showLoaded = anime({
+        targets:this,
+        showLoaded:[odlValue,newValue],
+        round: 1,
+        easing: 'linear'
+      });
+      //滚动的进度条
+      const backgroundSize = anime({
+        targets:"#progressBar .loadedBar",
+        backgroundSize:newValue+"%",
+        easing: 'linear'
+      });
+      //判断两个加载动画是否完成
+      if(newValue === 100){
+        showLoaded.complete = ()=>{
+          this.completeCount++;
+        }
+        backgroundSize.complete = ()=>{
+          this.completeCount++;
+        }
+      }
+    },
+    completeCount:function(){
+      //加载动画完成后延时一秒发送开始渲染模型的信号
+      if(this.completeCount === 2){
+        setTimeout(() => {
+          this.$emit("startRender");
+        }, 1000);
+      }
+    }
+  },
   mounted: function () {
     this.$nextTick(() => {
       this.canvas = this.$refs.crowdLoading;
@@ -28,6 +69,8 @@ export default {
   },
   data() {
     return {
+      loaded:0,
+      showLoaded:0,
       canvas: null,
       ctx: null,
       dpr: window.devicePixelRatio,
@@ -41,12 +84,12 @@ export default {
       allPeople: [],
       availablePeople: [],
       crowd: [],
-      firstRenderFlag :true
+      firstRenderFlag :true,
+      completeCount:0
     };
   },
   methods: {
     init: async function () {
-
       this.img = await this.$utils.loadImg(this.config.src);
       this.allPeople = this.getAllPeople();
       this.resize();
@@ -121,6 +164,16 @@ export default {
 #container {
   height: 100%;
   width: 100%;
+  pointer-events:none;
+}
+.container-leave-active{
+  transition: all 0.5s linear;
+}
+.container-leave{
+  opacity: 1;
+}
+.container-leave-to{
+  opacity: 0;
 }
 canvas {
   background: url("~@/assets/images/crowd-loading/crowd-background.jpg") no-repeat;
@@ -132,6 +185,9 @@ canvas {
   bottom: 0;
   width: 100%;
   height: 22px;
+  border-radius: 22px;
+  border: 2px solid black;
+  background: transparent;
 }
 #progressBar p {
   position: absolute;
@@ -141,22 +197,20 @@ canvas {
   font-size: 10px;
   font-weight: bold;
 }
-#bar {
-  width: 100%;
-  height: 100%;
-  border-radius: 22px;
-  border: 2px solid black;
-  background: transparent;
-  position: relative;
-}
-#bar::before {
-  content: "";
+#progressBar .loadedBar,#progressBar .bar{
   position: absolute;
   inset: 0;
-  border-radius: inherit;
   margin: 2px;
-  background: repeating-linear-gradient(135deg, #e73a32 0 10px, #ffe482 0 20px)
-      0/100% no-repeat,
-    repeating-linear-gradient(135deg, #ddd 0 10px, #eee 0 20px) 0/100%;
+  border-radius: inherit;
+}
+#progressBar .loadedBar{
+  margin: 2px;
+  background: repeating-linear-gradient(135deg, #e73a32 0 10px, #ffe482 0 20px) no-repeat;
+  background-size: 0%;
+}
+#progressBar .bar{
+  content: "";
+  background: repeating-linear-gradient(135deg, #ddd 0 10px, #eee 0 20px);
+  background-size: 100%;
 }
 </style>

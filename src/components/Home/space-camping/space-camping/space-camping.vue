@@ -7,16 +7,32 @@ import { CreateModel } from "./CreateModel.js";
 
 export default {
   name: "spaceCamping",
+  props:["start"],
+  data(){
+    return{
+      canvas:null,
+      createModel:null
+    }
+  },
   activated() {
     //this.$emit("overLoading");
   },
   mounted() {
-    const canvas = this.$refs.spaceCamping;
-    const flag = false;
-    if(flag)
-      createModel(canvas);
+    this.canvas = this.$refs.spaceCamping;
     //this.$emit("overLoading");
   },
+  watch:{
+    "start.startcompile":function(){
+        this.createModel = createModel(this.canvas);
+    },
+    "start.startrender":function(){
+        this.createModel.startRenderFlag = this.start.startrender;
+    },
+    "createModel.loaded":function(){
+      const loaded = this.createModel.loaded;
+      this.$bus.$emit('loaded',loaded);
+    }
+  }
 };
 
 function createModel(canvas) {
@@ -75,10 +91,10 @@ function createModel(canvas) {
   createModel.initEffect(unrealBloomPassParams);
 
   //渲染
-  
-    createModel.animate();
+  createModel.animate();
 
   window.addEventListener("resize", createModel.resize.bind(createModel));
+  return createModel;
 }
 </script>
 
