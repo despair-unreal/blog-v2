@@ -15,15 +15,6 @@ export default {
       this.init();
     });
   },
-  activated() {
-    if(!this.firstRenderFlag){
-      this.closeMask();
-      this.resize();
-    }
-  },
-  deactivated(){
-    this.openMask();
-  },
   data() {
     return {
       canvas:null,

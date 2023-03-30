@@ -1,5 +1,5 @@
 <template>
-  <div id="home" @mousewheel="changeView">
+  <div id="home" @mousewheel="getScrollDirection">
     <transition
       name="component-transition"
       mode="out-in"
@@ -25,52 +25,61 @@ export default {
   name: "home",
   components: {
     sectionOne,
-    loading
+    loading,
   },
   data() {
     return {
       currentIndex: 0,
-      componentArr: [ "sectionOne","loading" ],
+      componentArr: [ "sectionOne","loading"],
       changeViewFlag: true,
-      loadingCompletedFlag: false
+      loadingCompletedFlag: false,
     };
+  },
+  created(){
+    this.$bus.$on("changeView",direction=>{
+      this.changeView(direction);
+    });
   },
   watch: {
     currentIndex: function () {
       this.loadingCompletedFlag = false;
-    }
+    },
   },
   methods: {
     //当前组件页加载完成
     overLoading: function () {
       this.loadingCompletedFlag = true;
     },
-    //离开了
+    //当前组件页离开了
     beforeLeave: function () {
       this.changeViewFlag = false;
     },
-    //进来了
+    //下个组件页进来了
     afterEnter: function () {
       this.changeViewFlag = true;
     },
+    //获取滚轮方向
+    getScrollDirection: function () {
+      let direction = this.$utils.mouseWheelDirection(event);
+      this.changeView(direction);
+    },
     //切换组件页
-    changeView: function () {
+    changeView: function (direction) {
       //当前组件页加载完成才能切换组件页
       if (this.loadingCompletedFlag && this.changeViewFlag) {
-        //切换组件页
-        let direction = this.$utils.mouseWheelDirection(event);
-        switch (direction) {
-          case "Down":
-            if (this.currentIndex != this.componentArr.length - 1)
-              this.currentIndex += 1;
-            break;
-          case "Up":
-            if (this.currentIndex != 0)
-              this.currentIndex -= 1;
-            break;
+        if (direction) {
+          switch (direction) {
+            case "Down":
+              if (this.currentIndex != this.componentArr.length - 1)
+                this.currentIndex += 1;
+              break;
+            case "Up":
+              if (this.currentIndex != 0) this.currentIndex -= 1;
+              break;
+          }
         }
       }
-    }
+    },
   },
 };
 </script>

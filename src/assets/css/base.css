@@ -3,8 +3,14 @@
     padding: 0;
     box-sizing: border-box;
 }
+body{
+  font-family: Montserrat,Noto Sans SC;
+}
+a{
+  text-decoration: none;
+}
 canvas{
-    display: block;
+  display: block;
 }
 .absoluteFullScreen{
   position: absolute;

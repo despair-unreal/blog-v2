@@ -1,6 +1,6 @@
 <template>
   <div id="container" @mousewheel="stopPropagation">
-    <spaceCamping :start="start"></spaceCamping>
+    <spaceCamping :class="{hide:hideSpaceCamping}" :start="start"></spaceCamping>
     <crowdLoading :class="{hide:hideCrowdLoading}" @startRender="startRender" @overLoading="overLoading"></crowdLoading>
     <crowdmask :class="{hide:hideCrowdMask}" ref="crowdMask" @overLoading="overLoading"></crowdmask>
   </div>
@@ -22,11 +22,18 @@ export default {
     return {
       crowdMaskFlag :false,
       crowdLoadingFlag :false,
+      hideSpaceCamping:true,
       hideCrowdLoading:true,
       hideCrowdMask:false,
       start:{startcompile:false,startrender:false},
       loaded:0
     };
+  },
+  activated(){
+    //模型已经加载完毕
+    if(!this.crowdLoadingFlag && !this.hideSpaceCamping){
+      this.$emit("overLoading");
+    }
   },
   methods: {
     stopPropagation:()=>{
@@ -62,22 +69,25 @@ export default {
           crowdMaskEnd = true;
           break;
       }
-      //两个canvas的第一帧都绘制完毕
+      //两个canvas的第一帧绘制完成
       if(this.crowdMaskFlag && this.crowdLoadingFlag){
         this.hideCrowdLoading = false;
       }
       //遮罩动画绘制完毕
       if(crowdMaskEnd){
+        //过渡动画还在页面上显示，此时模型还没开始渲染
+        if(!this.hideCrowdLoading && !this.start.startrender){
+          //开始模型场景等的初始化预编译
+          this.start.startcompile = true;
+          this.hideSpaceCamping = false;
+        }
         //模型已经开始渲染
         if(this.start.startrender){
           this.hideCrowdLoading = true;
+          this.crowdLoadingFlag = false;
           this.hideCrowdMask = true;
+          this.crowdMaskFlag = false;
           this.$emit("overLoading");
-        }
-        //crowdLoading的第一帧都绘制完毕
-        if(!this.hideCrowdLoading){
-          //开始模型场景等的初始化
-          this.start.startcompile = true;
         }
       }
     }
