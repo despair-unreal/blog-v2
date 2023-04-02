@@ -12,6 +12,10 @@ a{
 canvas{
   display: block;
 }
+input{
+  font-family: inherit;
+  font-size: 100%;
+}
 .absoluteFullScreen{
   position: absolute;
   left: 0;

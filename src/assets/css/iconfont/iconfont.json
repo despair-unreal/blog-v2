@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8106245",
+      "name": "close",
+      "font_class": "close",
+      "unicode": "e69e",
+      "unicode_decimal": 59038
+    },
+    {
+      "icon_id": "34861722",
+      "name": "home标",
+      "font_class": "home",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "8776842",
+      "name": "search",
+      "font_class": "search",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
       "icon_id": "629331",
       "name": "上翻",
       "font_class": "shangfan",
