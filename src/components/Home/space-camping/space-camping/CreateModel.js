@@ -24,7 +24,7 @@ export class CreateModel {
         this.clock = new THREE.Clock();
         this.mixer = null;
         this.stats = null;
-        
+
         this.unrealBloomPass = null;
         this.renderPass = null;
         this.bloomComposer = null;
@@ -37,14 +37,14 @@ export class CreateModel {
         this.finalComposer = null;
     }
     init(params) {
-        const { sceneBg, cameraParams, renderParams, LightParams, showStats} = params;
+        const { sceneBg, cameraParams, renderParams, LightParams, showStats } = params;
         this.stage = this.setStage(this.canvas);
         this.scene = this.setScene(sceneBg);
         this.camera = this.setCamera(cameraParams);
         this.controls = this.setControls();
         this.renderer = this.setRender(renderParams);
         this.setLight(LightParams);
-        if(showStats)
+        if (showStats)
             this.stats = this.setStats();
 
     }
@@ -210,11 +210,11 @@ export class CreateModel {
                 //把模型添加进场景
                 this.scene.add(models);
                 //预编译场景
-                this.renderer.compile(this.scene,this.camera);
+                this.renderer.compile(this.scene, this.camera);
                 this.renderCompileFlag = true;
             },
             // called while loading is progressing
-            (xhr)=>{
+            (xhr) => {
                 this.loaded = (xhr.loaded / xhr.total) * 100;
             },
             // called when loading has errors
@@ -223,7 +223,7 @@ export class CreateModel {
             }
         );
     }
-    getModelsLoaded(){
+    getModelsLoaded() {
         return this.loaded;
     }
     setAnimation(models) {
@@ -359,19 +359,19 @@ export class CreateModel {
     }
     //渲染
     animate() {
-        //更新控制器
-        this.controls.update();
-        // 渲染器清除颜色、深度或模板缓存. 此方法将颜色缓存初始化为当前颜色
-        this.renderer.clear();
-        //更新帧数
-        if(this.stats)
-            this.stats.update();
-        //动画
-        if (this.mixer) {
-            const deltaSeconds = this.clock.getDelta()
-            this.mixer.update(deltaSeconds);
-        }
-        if(this.renderCompileFlag && this.startRenderFlag){
+        if (this.renderCompileFlag && this.startRenderFlag) {
+            //更新控制器
+            this.controls.update();
+            // 渲染器清除颜色、深度或模板缓存. 此方法将颜色缓存初始化为当前颜色
+            this.renderer.clear();
+            //更新帧数
+            if (this.stats)
+                this.stats.update();
+            //动画
+            if (this.mixer) {
+                const deltaSeconds = this.clock.getDelta()
+                this.mixer.update(deltaSeconds);
+            }
             //局部辉光
             if (!this.useFinalPassFlag) {
                 this.renderer.clearDepth();
@@ -424,7 +424,6 @@ export class CreateModel {
                 obj.material = new Proto({ color: 0x000000 });
             }
         }
-
     }
     //还原材质
     restoreMaterial(obj) {

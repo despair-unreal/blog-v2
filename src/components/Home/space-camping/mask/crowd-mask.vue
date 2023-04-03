@@ -23,8 +23,7 @@ export default {
       bgImg: null,
       dpr: window.devicePixelRatio,
       maskCircle: null,
-      drawFlag: true,
-      firstRenderFlag:true
+      drawFlag: true
     };
   },
   methods: {
@@ -33,7 +32,7 @@ export default {
       this.resize();
       window.addEventListener("resize", this.resize);
 
-      this.closeMask();
+      // this.closeMask();
     },
     resize: function(){
       this.$parent.initStageAndDpr(this.ctx, this.dpr, this.canvas, this.stage);
@@ -42,7 +41,6 @@ export default {
       this.drawCircle(false);
     },
     closeMask: function () {
-      this.firstRenderFlag = true;
       this.drawCircle(true);
     },
     drawCircle: function (intoLoadingFlag) {
@@ -72,13 +70,10 @@ export default {
       if (this.drawFlag) {
         this.ctx.clearRect(0, 0, this.stage.width, this.stage.height);
         this.maskCircle.render(this.stage, this.ctx, this.bgImg);
-        if (this.firstRenderFlag) {
-          this.firstRenderFlag = false;
-          this.$emit("overLoading","crowdMask");
-        }
+        
         requestAnimationFrame(this.render);
       }else{
-        this.$emit("overLoading","crowdMaskEnd");
+        this.$emit("overCrowdMask");
       }
     },
   },

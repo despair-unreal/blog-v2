@@ -57,12 +57,17 @@ export default {
       maxCurrent:1
     };
   },
-  activated() {
-    //this.$emit("overLoading");
+  activated(){
+    //恢复模型的渲染
+    if(this.createModel)
+      this.createModel.startRenderFlag = true;
+  },
+  deactivated(){
+    //暂停模型的渲染
+    this.createModel.startRenderFlag = false;
   },
   mounted() {
     this.canvas = this.$refs.spaceCamping;
-    //this.$emit("overLoading");
   },
   methods:{
     changeDescription:function(){
@@ -76,11 +81,11 @@ export default {
     }
   },
   watch: {
-    "start.startcompile": function () {
+    "start.compile": function () {
       this.createModel = createModel(this.canvas);
     },
-    "start.startrender": function () {
-      this.createModel.startRenderFlag = this.start.startrender;
+    "start.render": function () {
+      this.createModel.startRenderFlag = this.start.render;
     },
     "createModel.loaded": function () {
       const loaded = this.createModel.loaded;
@@ -128,7 +133,7 @@ function createModel(canvas) {
         intensity: 1,
       },
     },
-    showStats: true,
+    showStats: false,
   };
   createModel.init(initParams);
 

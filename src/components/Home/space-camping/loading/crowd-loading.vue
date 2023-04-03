@@ -102,7 +102,7 @@ export default {
       this.crowd.forEach((person) => person.render(this.ctx));
       if (this.firstRenderFlag) {
         this.firstRenderFlag = false;
-        this.$emit("overLoading","crowdLoading");
+        this.$emit("completeCrowdLoading");
       }
       requestAnimationFrame(this.render);
     },

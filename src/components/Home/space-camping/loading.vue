@@ -1,42 +1,48 @@
 <template>
   <div id="container" @mousewheel="stopPropagation">
-    <spaceCamping :class="{hide:hideSpaceCamping}" :start="start"></spaceCamping>
-    <crowdLoading :class="{hide:hideCrowdLoading}" @startRender="startRender" @overLoading="overLoading"></crowdLoading>
-    <crowdmask :class="{hide:hideCrowdMask}" ref="crowdMask" @overLoading="overLoading"></crowdmask>
+    <spaceCamping
+      :class="{ hide: hide.spaceCamping }"
+      :start="start"
+    ></spaceCamping>
+    <crowdLoading
+      :class="{ hide: hide.crowdLoading }"
+      @startRender="startRender"
+      @completeCrowdLoading="completeCrowdLoading"
+    ></crowdLoading>
+    <crowdmask
+      :class="{ hide: hide.crowdMask }"
+      ref="crowdMask"
+      @overCrowdMask="overCrowdMask"
+    ></crowdmask>
   </div>
 </template>
 
 <script>
 import crowdLoading from "./loading/crowd-loading.vue";
 import crowdmask from "./mask/crowd-mask.vue";
-import spaceCamping from './space-camping/space-camping.vue';
+import spaceCamping from "./space-camping/space-camping.vue";
 
 export default {
   name: "loading",
   components: {
     crowdmask,
     crowdLoading,
-    spaceCamping
+    spaceCamping,
   },
   data() {
     return {
-      crowdMaskFlag :false,
-      crowdLoadingFlag :false,
-      hideSpaceCamping:true,
-      hideCrowdLoading:true,
-      hideCrowdMask:false,
-      start:{startcompile:false,startrender:false},
-      loaded:0
+      hide: { spaceCamping: true, crowdLoading: false, crowdMask: false },
+      start: { compile: false, render: false },
     };
   },
-  activated(){
+  activated() {
     //模型已经加载完毕
-    if(!this.crowdLoadingFlag && !this.hideSpaceCamping){
+    if (this.start.render) {
       this.$emit("overLoading");
     }
   },
   methods: {
-    stopPropagation:()=>{
+    stopPropagation: () => {
       //阻止向上冒泡
       event.stopPropagation();
     },
@@ -49,59 +55,45 @@ export default {
       canvas.height = stage.height * dpr;
       ctx.scale(dpr, dpr);
     },
-    startRender:function(){
-      //开始渲染模型
-      this.start.startrender = true;
+    //开始渲染模型
+    startRender: function () {
+      this.start.render = true;
       setTimeout(() => {
         this.$refs.crowdMask.openMask();
       }, 1000);
     },
-    overLoading: function (name) {
-      let crowdMaskEnd = false;
-      switch (name) {
-        case "crowdMask":
-          this.crowdMaskFlag = true;
-          break;
-        case "crowdLoading":
-          this.crowdLoadingFlag = true;
-          break;
-        case "crowdMaskEnd":
-          crowdMaskEnd = true;
-          break;
-      }
-      //两个canvas的第一帧绘制完成
-      if(this.crowdMaskFlag && this.crowdLoadingFlag){
-        this.hideCrowdLoading = false;
-      }
-      //遮罩动画绘制完毕
-      if(crowdMaskEnd){
-        //过渡动画还在页面上显示，此时模型还没开始渲染
-        if(!this.hideCrowdLoading && !this.start.startrender){
-          //开始模型场景等的初始化预编译
-          this.start.startcompile = true;
-          this.hideSpaceCamping = false;
-        }
+    //要先等crowdLoading绘制完第一帧再把遮罩收起来
+    completeCrowdLoading: function () {
+      this.$refs.crowdMask.closeMask();
+    },
+    //每次遮罩动画绘制完毕都会触发此事件
+    overCrowdMask: function () {
+      //模型还没开始渲染
+      if (!this.start.render) {
+        //开始模型场景等的初始化预编译
+        this.start.compile = true;
+        this.hide.spaceCamping = false;
+      } else {
         //模型已经开始渲染
-        if(this.start.startrender){
-          this.hideCrowdLoading = true;
-          this.crowdLoadingFlag = false;
-          this.hideCrowdMask = true;
-          this.crowdMaskFlag = false;
-          this.$emit("overLoading");
-        }
+        //把loading页和遮罩页隐藏起来
+        const obj1 = this.hide;
+        Object.keys(obj1).forEach((key) => {
+          if (key !== "spaceCamping") obj1[key] = true;
+        });
+        this.$emit("overLoading");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
 /* #container{
   pointer-events:none;
 } */
-#container > *:last-child{
+#container > *:last-child {
   transition: all 0.5s linear;
 }
-.hide{
+.hide {
   opacity: 0 !important;
 }
 </style>
