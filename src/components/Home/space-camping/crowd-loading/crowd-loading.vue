@@ -1,5 +1,4 @@
 <template>
-<transition name="container">
   <div id="container">
     <canvas class="absoluteFullScreen" ref="crowdLoading"></canvas>
     <div id="progressBar">
@@ -8,7 +7,6 @@
       <p>加载中：{{showLoaded}}%</p>
     </div>
   </div>
-  </transition>
 </template>
 
 <script>
@@ -121,8 +119,17 @@ export default {
       }
       return people;
     },
+    initStageAndDpr: (ctx, dpr, canvas, stage) => {
+      // 初始化舞台大小
+      stage.width = canvas.clientWidth;
+      stage.height = canvas.clientHeight;
+      // 处理设备分辨率dpr
+      canvas.width = stage.width * dpr;
+      canvas.height = stage.height * dpr;
+      ctx.scale(dpr, dpr);
+    },
     resize: function () {
-      this.$parent.initStageAndDpr(this.ctx, this.dpr, this.canvas, this.stage);
+      this.initStageAndDpr(this.ctx, this.dpr, this.canvas, this.stage);
       // 重置人群
       this.crowd.forEach((person) => person.kill());
       this.availablePeople.length = 0;
@@ -165,15 +172,6 @@ export default {
   height: 100%;
   width: 100%;
   pointer-events:none;
-}
-.container-leave-active{
-  transition: all 0.5s linear;
-}
-.container-leave{
-  opacity: 1;
-}
-.container-leave-to{
-  opacity: 0;
 }
 canvas {
   background: url("~@/assets/images/crowd-loading/crowd-background.jpg") no-repeat;
