@@ -194,6 +194,8 @@ canvas {
   transform: translate(-50%, -50%);
   font-size: 10px;
   font-weight: bold;
+  color: black;
+  line-height: 1;
 }
 #progressBar .loadedBar,#progressBar .bar{
   position: absolute;

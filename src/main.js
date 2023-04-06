@@ -11,6 +11,7 @@ import "@fontsource/noto-sans-sc";
 import "./assets/css/iconfont/iconfont.css"
 //全局样式
 import "./assets/css/base.css";
+import "./assets/css/reset.css";
 
 Vue.config.productionTip = false
 Vue.prototype.$utils = utils

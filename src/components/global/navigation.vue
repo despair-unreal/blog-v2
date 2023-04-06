@@ -1,16 +1,16 @@
 <template>
-  <div id="nav">
-    <a id="blog-name" src="/#">
+  <div id="nav" :class="{homeFontcolor}">
+    <router-link id="blog-name" to="/home">
       <i class="iconfont icon-home"></i>
       <div class="name">
         <span>BAIKONG</span>
         <span>HOME</span>
       </div>
-    </a>
+    </router-link>
     <div id="menus">
       <i class="iconfont icon-search" @click="openSearch"></i>
       <div v-for="item in menus" :key="item.name" class="menus-item">
-        <a :src="item.src">{{item.name}}</a>
+        <router-link :to="item.src">{{item.name}}</router-link>
       </div>
     </div>
     <search :opensearch="opensearch" @closeSearch="closeSearch"></search>
@@ -28,12 +28,17 @@ export default {
     return{
       opensearch:false,
       menus:[
-        {name:"文章",src:''},
+        {name:"文章",src:'/article'},
         {name:"归类",src:''},
         {name:"随笔",src:''},
         {name:"留言",src:''},
         {name:"音乐",src:''},
       ]
+    }
+  },
+  computed: {
+    homeFontcolor () {
+      return this.$route.path === '/home' ? 'homeFontcolor' : ''
     }
   },
   methods:{
@@ -48,6 +53,9 @@ export default {
 </script>
 
 <style>
+.homeFontcolor{
+  color: #eee !important;
+}
 #nav{
   width: 100%;
   height: 60px;
@@ -58,7 +66,7 @@ export default {
   z-index: 9;
   padding: 0 36px;
   font-size: 16px;
-  color: #eee;
+  color: #4c4948;
   user-select: none;
 }
 #blog-name .icon-home{

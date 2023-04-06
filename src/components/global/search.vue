@@ -135,6 +135,7 @@ export default {
   right: 8px;
   font-weight: 900;
   font-size: 28px;
+  line-height: 1;
   color: #797979;
 }
 </style>

@@ -6,6 +6,76 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "577402",
+      "name": "向右1",
+      "font_class": "xiangyou1",
+      "unicode": "e775",
+      "unicode_decimal": 59253
+    },
+    {
+      "icon_id": "6886337",
+      "name": "分隔",
+      "font_class": "fenge",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "344004",
+      "name": "版本更新",
+      "font_class": "banbengengxin",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "826168",
+      "name": "置顶",
+      "font_class": "zhiding",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "1727474",
+      "name": "234日历",
+      "font_class": "rili",
+      "unicode": "e8cf",
+      "unicode_decimal": 59599
+    },
+    {
+      "icon_id": "1727480",
+      "name": "238图片",
+      "font_class": "tupian",
+      "unicode": "e8d3",
+      "unicode_decimal": 59603
+    },
+    {
+      "icon_id": "7542757",
+      "name": "24gf-tags",
+      "font_class": "24gf-tags",
+      "unicode": "e885",
+      "unicode_decimal": 59525
+    },
+    {
+      "icon_id": "10937694",
+      "name": "分组",
+      "font_class": "grouping",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "11743699",
+      "name": "刷新",
+      "font_class": "refresh",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "15685026",
+      "name": "列表",
+      "font_class": "liebiao",
+      "unicode": "e6be",
+      "unicode_decimal": 59070
+    },
+    {
       "icon_id": "8106245",
       "name": "close",
       "font_class": "close",
