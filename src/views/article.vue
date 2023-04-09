@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div v-for="index in 6" :key="index" class="article-item card-box">
+    <div v-for="index in 2" :key="index" class="article-item card-box">
       <div class="cover">
         <img src="@/assets/images/crowd-loading/crowd-background.jpg" />
       </div>
@@ -33,42 +33,99 @@
             <router-link to="">记录</router-link>
           </span>
         </div>
-        <div class="content text-overflow">
+        <div class="content text-overflow sticky-content">
           <p>游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录</p>
         </div>
       </div>
+    </div>
+    <div class="pagination">
+      <router-link v-if="currentIndex !== 1" @click.native="preCurrent" to="">
+        <i class="iconfont icon-xiangzuo1"></i>
+      </router-link>
+      <router-link v-for="item in showPage" :key="item" @click.native="changeCurrent(item)" :class="[{'current':currentIndex === item},'page-number']" to="">
+        {{item}}
+      </router-link>
+      <span class="space" v-if="currentIndex < maxPage-2">...</span>
+      <router-link :class="[{'current':currentIndex === maxPage},'page-number']" @click.native="changeCurrent(maxPage)" to="">
+        {{maxPage}}
+      </router-link>
+      <router-link v-if="currentIndex !== maxPage" @click.native="nextCurrent" to="">
+        <i class="iconfont icon-xiangyou1"></i>
+      </router-link>
     </div>
   </main>
 </template>
 
 <script>
-export default {};
+export default {
+  data(){
+    return{
+      currentIndex:1,
+      maxPage:7
+    }
+  },
+  computed:{
+    showPage:function(){
+      if(this.currentIndex<this.maxPage-1)
+        return this.currentIndex+1;
+      else
+        return this.maxPage-1;
+    }
+  },
+  methods:{
+    preCurrent:function(){
+      this.currentIndex--;
+    },
+    nextCurrent:function(){
+      this.currentIndex++;
+    },
+    changeCurrent:function(item){
+      this.currentIndex = item;
+    }
+  }
+};
 </script>
 
 <style>
+@media screen and (max-width:768px) {
+  .article-item {
+    flex-direction: column;
+    height: auto !important;
+  }
+  .article-item .cover{
+    width: 100% !important;
+    height: 230px !important;
+    border-radius: 8px 8px 0 0 !important;
+  }
+  .article-item .info{
+    width: 100% !important;
+    padding: 20px 20px 30px !important;
+  }
+  .article-item:first-child .info .content{
+    -webkit-line-clamp: 8;
+  }
+  .article-item:not(:first-child) .info .content{
+    -webkit-line-clamp: 3;
+  }
+}
 .article-item {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 210px;
-  transition: all .3s;
-}
-.article-item:first-child{
-  height: 392px;
-}
-.article-item:not(:first-child){
-  margin-top: 20px;
 }
 .article-item:hover .cover img{
   transform: scale(1.1);
 }
 .article-item .cover{
+  position: relative;
   width: 55%;
-  height: 100%;
+  align-self: stretch;
   overflow: hidden;
   border-radius: 12px 0 0 12px;
+  background: black;
 }
 .article-item .cover img{
+  position: absolute;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -76,8 +133,7 @@ export default {};
 }
 .article-item .info{
   width: 45%;
-  height: 90%;
-  padding: 0 30px;
+  padding: 20px 30px;
   overflow: hidden;
 }
 .article-item .info .title{
@@ -101,6 +157,9 @@ export default {};
 .article-item .info .meta>span:not(.category){
   cursor: default;
 }
+.article-item .info .meta>span{
+  display: inline-block;
+}
 .article-item .info .meta .category a:hover{
   text-decoration:underline;
 }
@@ -112,10 +171,42 @@ export default {};
 .article-item .info .content{
   margin-top: 6px;
 }
-.article-item:first-child .info .content{
+.article-item .info .content{
+  -webkit-line-clamp: 3;
+}
+.article-item .info .sticky-content{
   -webkit-line-clamp: 8;
 }
-.article-item:not(:first-child) .info .content{
-  -webkit-line-clamp: 2;
+.pagination{
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+  font-size: 16px;
 }
+.pagination>*{
+  display: inline-block;
+  text-align: center;
+  margin: 0 4px;
+  min-width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .4s;
+}
+.pagination .current{
+  background: #1f2d3d;
+  color: #fff;
+  transition: all .4s;
+}
+.pagination .current,
+.pagination .space{
+  cursor: default;
+}
+.pagination>*:not(.space):hover{
+  background: #fff;
+  color: #1f2d3d;
+  box-shadow: 0 3px 8px 3px rgba(150, 150, 150, 0.1);
+}
+
 </style>

@@ -1,12 +1,17 @@
 <template>
   <div id="container">
     <router-view id="main-content" />
-    <div id="sidebar">this is aside nav</div>
+    <sidebar id="sidebar"></sidebar>
   </div>
 </template>
 
 <script>
-export default {};
+import sidebar from './sidebar.vue'
+export default {
+  components:{
+    sidebar
+  }
+};
 </script>
 
 <style>
@@ -18,14 +23,15 @@ export default {};
   max-width: 1200px;
   margin: 0 auto;
 }
+#container>*{
+  transition: all .3s;
+}
 #main-content{
   width: 75%;
 }
 #sidebar{
   width: 25%;
-  height: 100%;
   padding-left: 15px;
-  border: 1px solid black;
 }
 @media screen and (max-width:900px){
   #container{
@@ -37,6 +43,7 @@ export default {};
   #sidebar{
     width: 100% !important;
     margin-top: 20px;
+    padding-left: 0px;
   }
 }
 </style>

@@ -24,6 +24,7 @@ body {
 
 a {
   text-decoration: none;
+  transition: all .2s;
 }
 ::-webkit-scrollbar {
   width: 8px;
@@ -60,8 +61,11 @@ input {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 12px;
   box-shadow: 0 3px 8px 6px rgba(150, 150, 150, 0.1);
+  transition: all .3s;
 }
-
+.card-box:not(:first-child){
+  margin-top: 20px;
+}
 .card-box:hover {
   box-shadow: 0 3px 8px 6px rgba(150, 150, 150, 0.3);
 }
