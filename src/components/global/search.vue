@@ -45,7 +45,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .hide{
   opacity: 0 !important;
   pointer-events: none;

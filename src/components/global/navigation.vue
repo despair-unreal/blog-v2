@@ -38,7 +38,13 @@ export default {
   },
   computed: {
     homeFontcolor () {
-      return this.$route.path === '/home' ? 'homeFontcolor' : ''
+      switch (this.$route.path) {
+        case '/articleContent':
+        case '/home':
+          return 'homeFontcolor';
+        default:
+          return '';
+      }
     }
   },
   methods:{
@@ -52,7 +58,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .homeFontcolor{
   color: #eee !important;
 }

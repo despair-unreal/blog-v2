@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "11195045",
+      "name": "链接",
+      "font_class": "lianjie",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "3506850",
+      "name": "wechat",
+      "font_class": "wechat",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "3506877",
+      "name": "weibo",
+      "font_class": "weibo",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "3506928",
+      "name": "qq",
+      "font_class": "qq",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "6337455",
+      "name": "点赞",
+      "font_class": "dianzan",
+      "unicode": "ec7f",
+      "unicode_decimal": 60543
+    },
+    {
+      "icon_id": "18336450",
+      "name": "评论",
+      "font_class": "pinglun",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "878356",
+      "name": "阅读量",
+      "font_class": "yueduliang",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
       "icon_id": "577406",
       "name": "向左1",
       "font_class": "xiangzuo1",
