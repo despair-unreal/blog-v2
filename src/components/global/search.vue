@@ -52,16 +52,7 @@ export default {
 }
 
 #mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: black;
   opacity: 0.6;
-  width: 100%;
-  height: 100%;
-  transition:all 0.5s ease;
 }
 .dialog-hide{
   top: 0 !important;

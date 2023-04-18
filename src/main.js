@@ -18,6 +18,25 @@ Vue.prototype.$utils = utils
 //EventBus
 Vue.prototype.$bus = new Vue()
 
+Vue.prototype.$store = {
+  debug: false,
+  state: {
+  },
+  setMessageAction (newValue) {
+    if (this.debug) console.log('setMessageAction triggered with', newValue)
+    this.state.message = newValue
+  },
+  addToStateAction (value,key) {
+    if (this.debug) console.log('addToStateAction triggered with', value)
+    this.state[key] = value;
+  },
+  clearMessageAction () {
+    if (this.debug) console.log('clearMessageAction triggered')
+    this.state.message = ''
+  }
+}
+
+
 new Vue({
   router,
   render: h => h(App)

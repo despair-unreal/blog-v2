@@ -6,6 +6,62 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "10593828",
+      "name": "笔记本,记事本,本子,辅助方法_jurassic",
+      "font_class": "jurassic_text",
+      "unicode": "e6a2",
+      "unicode_decimal": 59042
+    },
+    {
+      "icon_id": "1190",
+      "name": "管理",
+      "font_class": "guanli",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "3848414",
+      "name": "黑板",
+      "font_class": "heiban",
+      "unicode": "e676",
+      "unicode_decimal": 58998
+    },
+    {
+      "icon_id": "1149100",
+      "name": "音乐1",
+      "font_class": "yinle1",
+      "unicode": "e6b1",
+      "unicode_decimal": 59057
+    },
+    {
+      "icon_id": "1876329",
+      "name": "发布文章",
+      "font_class": "fabuwenzhang",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
+      "icon_id": "1690223",
+      "name": "music_playlist",
+      "font_class": "music_playlist",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "3456457",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e70f",
+      "unicode_decimal": 59151
+    },
+    {
+      "icon_id": "11778708",
+      "name": "顶部",
+      "font_class": "dingbu",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
       "icon_id": "11195045",
       "name": "链接",
       "font_class": "lianjie",

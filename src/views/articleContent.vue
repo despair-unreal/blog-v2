@@ -91,6 +91,11 @@ export default {
       },
     };
   },
+  mounted(){
+    //如果本文章页有设置封面，则让导航栏的字体颜色为#eee即设置的FontcolorLightGrey类
+    if(this.bg.backgroundImage)
+      this.$bus.$emit("navFontColorClass","FontcolorLightGrey");
+  }
 };
 </script>
 

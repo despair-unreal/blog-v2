@@ -24,7 +24,15 @@
 
 <script>
 export default {
-  props:["infoData"]
+  // props:["infoData"],
+  data(){
+    return {
+      infoData:[]
+    }
+  },
+  created(){
+    this.infoData = this.$store.state.infoData;
+  }
 }
 </script>
 

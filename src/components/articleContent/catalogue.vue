@@ -1,5 +1,5 @@
 <template>
-  <div class="catalogue card-box">
+  <div :class="[{ show: isOpenCatalogue }, 'catalogue', 'card-box']">
     <div class="title">
       <i class="iconfont icon-liebiao"></i>
       <span>目录</span>
@@ -41,6 +41,7 @@ export default {
     return {
       currentToc: null,
       scrollPercentage: 0,
+      isOpenCatalogue: false,
     };
   },
   methods: {
@@ -87,9 +88,8 @@ export default {
           this.currentToc = null;
       });
     },
-  },
-  mounted() {
-    window.addEventListener("scroll", () => {
+    // 设置目录上的内容浏览进度以及根据进度为目录标题设置active
+    setCurrentTocAndScrollPercentage:function(){
       const article = this.$parent.$refs.article;
       const articleRect = article.getBoundingClientRect();
       //文章内容相对于视口的位置
@@ -107,30 +107,36 @@ export default {
       );
       // 根据滚动内容位置来为a标签设置active样式
       this.getCurrentToc();
+    }
+  },
+  created() {
+    this.$bus.$on("isOpenCatalogue", (res) => {
+      this.isOpenCatalogue = res;
     });
+  },
+  mounted() {
+    window.addEventListener("scroll", this.setCurrentTocAndScrollPercentage);
+  },
+  beforeDestroy(){
+    window.removeEventListener('scroll', this.setCurrentTocAndScrollPercentage);
   }
 };
 </script>
 
 <style scoped>
-@media screen and (max-width: 900px){
-  .catalogue{
+@media screen and (max-width: 900px) {
+  .catalogue {
     position: fixed;
+    opacity: 0;
     right: 45px;
-    /* right: -100%; */
-    /* opacity: 0; */
     bottom: 30px;
     backdrop-filter: blur(10px);
     width: 300px;
     transform-origin: right bottom;
-    animation: .3s ease 0s 1 normal none running open-catalogue;
-  }
-}
-@keyframes open-catalogue {
-  0%{
     transform: scale(0.7);
   }
-  100%{
+  .catalogue.show {
+    opacity: 1;
     transform: scale(1);
   }
 }

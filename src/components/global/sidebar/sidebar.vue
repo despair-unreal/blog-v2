@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <info :infoData="infoData"></info>
+    <info></info>
     <recentArticle></recentArticle>
     <category></category>
     <tags></tags>
@@ -13,15 +13,6 @@ import category from './category.vue';
 import recentArticle from './recentArticle.vue';
 import info from './info.vue';
 export default {
-  components: { recentArticle,category,tags, info },
-  data() {
-    return {
-      infoData: [
-        { title: "文章", num: "64", src: "" },
-        { title: "标签", num: "90", src: "" },
-        { title: "分类", num: "18", src: "" },
-      ]
-    };
-  }
+  components: { recentArticle,category,tags, info }
 };
 </script>
