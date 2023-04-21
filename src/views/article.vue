@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <main>
       <div v-for="index in 2" :key="index" class="article-item card-box">
         <router-link class="cover" to="/articleContent">
@@ -18,71 +18,25 @@
         </div>
       </div>
     </main>
-    <div class="pagination">
-      <router-link v-if="currentIndex !== 1" @click.native="preCurrent" to="">
-        <i class="iconfont icon-xiangzuo1"></i>
-      </router-link>
-      <router-link
-        v-for="item in showPage"
-        :key="item"
-        @click.native="changeCurrent(item)"
-        :class="[{ current: currentIndex === item }, 'page-number']"
-        to=""
-      >
-        {{ item }}
-      </router-link>
-      <span class="space" v-if="currentIndex < maxPage - 2">...</span>
-      <router-link
-        :class="[{ current: currentIndex === maxPage }, 'page-number']"
-        @click.native="changeCurrent(maxPage)"
-        to=""
-      >
-        {{ maxPage }}
-      </router-link>
-      <router-link
-        v-if="currentIndex !== maxPage"
-        @click.native="nextCurrent"
-        to=""
-      >
-        <i class="iconfont icon-xiangyou1"></i>
-      </router-link>
-    </div>
+    <pagination></pagination>
   </div>
 </template>
 
 <script>
 import articleMeta from "../components/articleContent/articleMeta.vue";
+import pagination from '../components/global/pagination.vue';
 export default {
   components: {
     articleMeta,
-  },
-  data() {
-    return {
-      currentIndex: 1,
-      maxPage: 7,
-    };
-  },
-  computed: {
-    showPage: function () {
-      if (this.currentIndex < this.maxPage - 1) return this.currentIndex + 1;
-      else return this.maxPage - 1;
-    },
-  },
-  methods: {
-    preCurrent: function () {
-      this.currentIndex--;
-    },
-    nextCurrent: function () {
-      this.currentIndex++;
-    },
-    changeCurrent: function (item) {
-      this.currentIndex = item;
-    },
+    pagination,
   },
 };
 </script>
 
 <style scoped>
+.container{
+  padding: 0 !important;
+}
 @media screen and (max-width: 768px) {
   .article-item {
     flex-direction: column;
@@ -152,36 +106,5 @@ export default {
 }
 .article-item .info .sticky-content {
   -webkit-line-clamp: 8;
-}
-.pagination {
-  margin-top: 20px;
-  text-align: center;
-  width: 100%;
-  font-size: 16px;
-}
-.pagination > * {
-  display: inline-block;
-  text-align: center;
-  margin: 0 4px;
-  min-width: 24px;
-  height: 24px;
-  line-height: 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.4s;
-}
-.pagination .current {
-  background: #1f2d3d;
-  color: #fff;
-  transition: all 0.4s;
-}
-.pagination .current,
-.pagination .space {
-  cursor: default;
-}
-.pagination > *:not(.space):hover {
-  background: #fff;
-  color: #1f2d3d;
-  box-shadow: 0 3px 8px 3px rgba(150, 150, 150, 0.1);
 }
 </style>

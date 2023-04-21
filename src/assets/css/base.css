@@ -44,6 +44,7 @@
 
 .layout>*:first-child {
   width: 75%;
+  padding: 50px 40px;
 }
 
 .layout>*:nth-child(2) {

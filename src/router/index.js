@@ -6,6 +6,7 @@ import blog from '../components/global/blog.vue'
 import article from '../views/article.vue'
 import articleContent from '../views/articleContent.vue'
 import classify from '../views/classify.vue'
+import articleOverview from '../views/articleOverview.vue'
 
 
 Vue.use(VueRouter)
@@ -25,6 +26,11 @@ const routes = [
         path: '/classify',
         name: 'classify',
         component: classify
+      },
+      {
+        path: '/articleOverview',
+        name: 'articleOverview',
+        component: articleOverview
       }
     ]
   },
