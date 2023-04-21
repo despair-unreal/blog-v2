@@ -5,6 +5,7 @@ import home from '../views/Home.vue'
 import blog from '../components/global/blog.vue'
 import article from '../views/article.vue'
 import articleContent from '../views/articleContent.vue'
+import classify from '../views/classify.vue'
 
 
 Vue.use(VueRouter)
@@ -16,9 +17,14 @@ const routes = [
     component:blog,
     children:[
       {
-        path: 'article',
+        path: '',
         name: 'article',
         component: article
+      },
+      {
+        path: '/classify',
+        name: 'classify',
+        component: classify
       }
     ]
   },

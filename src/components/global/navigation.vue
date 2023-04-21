@@ -40,8 +40,8 @@ export default {
       isVisible: null,
       home:{ name: "HOME",pageName:"home", src: "/home", icon:"icon-home"},
       menus: [
-        { name: "文章",pageName:"article", src: "/article", icon:"icon-fabuwenzhang"},
-        { name: "归类",pageName:"classify",  src: "", icon: "icon-guanli"},
+        { name: "文章",pageName:"article", src: "/", icon:"icon-fabuwenzhang"},
+        { name: "归类",pageName:"classify",  src: "/classify", icon: "icon-guanli"},
         { name: "随笔",pageName:"essay",  src: "", icon: "icon-jurassic_text"},
         { name: "留言",pageName:"board",  src: "", icon: "icon-heiban"},
         { name: "音乐",pageName:"music",  src: "", icon: "icon-yinle1"},
@@ -77,18 +77,21 @@ export default {
     },
   },
   methods: {
+    //搜索框
     openSearch: function () {
       this.opensearch = true;
     },
     closeSearch: function () {
       this.opensearch = false;
     },
+    //侧边导航栏
     openRightNav: function(){
       this.openrightnav = true;
     },
     closeRightNav: function(){
       this.openrightnav = false;
     },
+    //导航栏滚动样式
     setNavScrollClass: function(){
       //根据比较当前与上次的页面滚动距离来判断页面是往哪个方向滚动
       //向下滚动
