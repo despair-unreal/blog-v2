@@ -42,7 +42,7 @@ export default {
       menus: [
         { name: "文章",pageName:"article", src: "/", icon:"icon-fabuwenzhang"},
         { name: "归类",pageName:"classify",  src: "/classify", icon: "icon-guanli"},
-        { name: "随笔",pageName:"essay",  src: "", icon: "icon-jurassic_text"},
+        { name: "随笔",pageName:"essay",  src: "/essay", icon: "icon-jurassic_text"},
         { name: "留言",pageName:"board",  src: "", icon: "icon-heiban"},
         { name: "音乐",pageName:"music",  src: "", icon: "icon-yinle1"},
       ],

@@ -1,24 +1,25 @@
 <template>
   <div class="recent-article card-box">
-      <h2>
-        <i class="iconfont icon-banbengengxin"></i>
-        <span>最新文章</span>
-      </h2>
-      <div v-for="item in 6" :key="item" class="list-item">
-        <router-link class="text-overflow" to="">
-          父子组件的生命周期渲染顺序问题父子组件的生命周期渲染顺序问题
-        </router-link>
-        <time datetime="2021-12-17 09:39" title="发表于 2021-12-17 09:39"
-          >2021-12-17 09:39</time
-        >
-      </div>
+    <h2>
+      <i class="iconfont icon-banbengengxin"></i>
+      <span>最新文章</span>
+    </h2>
+    <div v-for="item in 6" :key="item" class="list-item">
+      <router-link class="text-overflow" to="">
+        父子组件的生命周期渲染顺序问题父子组件的生命周期渲染顺序问题
+      </router-link>
+      <time datetime="2021-12-17 09:39" title="发表于 2021-12-17 09:39"
+        >2021-12-17 09:39</time
+      >
     </div>
+    <moreButtom :goLink="'/articleOverview'"></moreButtom>
+  </div>
 </template>
 
 <script>
+import moreButtom from './moreButtom.vue';
 export default {
-
-}
+  components: { moreButtom }};
 </script>
 
 <style scoped>

@@ -9,18 +9,15 @@
           <span>hexo</span>
           <span>2</span>
         </router-link>
-        <router-link to="">
-          <span>
-            <span>查看更多</span><i class="iconfont icon-xiangyou1"></i>
-          </span>
-        </router-link>
       </div>
+      <moreButtom :goLink="'/classify'"></moreButtom>
     </div>
 </template>
 
 <script>
+import moreButtom from './moreButtom.vue'
 export default {
-
+  components: { moreButtom },
 }
 </script>
 
@@ -45,16 +42,5 @@ export default {
 .category .category-list a>span:last-child{
   width: 20%;
   text-align: right;
-}
-.category .category-list a:last-child>span{
-  text-align: center;
-  width: 100%;
-}
-.category .category-list a:last-child>span span{
-  padding-right: 6px;
-  transition: padding .4s;
-}
-.category .category-list a:last-child:hover>span span{
-  padding-right: 12px;
 }
 </style>
