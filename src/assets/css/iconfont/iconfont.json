@@ -6,6 +6,83 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "703504",
+      "name": "repeat-once",
+      "font_class": "repeat-once",
+      "unicode": "ea47",
+      "unicode_decimal": 59975
+    },
+    {
+      "icon_id": "29300667",
+      "name": "sound-off",
+      "font_class": "sound-off",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "15262808",
+      "name": "1_music87",
+      "font_class": "list-play",
+      "unicode": "e6ac",
+      "unicode_decimal": 59052
+    },
+    {
+      "icon_id": "15262810",
+      "name": "1_music95",
+      "font_class": "search-music",
+      "unicode": "e6ab",
+      "unicode_decimal": 59051
+    },
+    {
+      "icon_id": "15262831",
+      "name": "1_music85",
+      "font_class": "random-play",
+      "unicode": "e6aa",
+      "unicode_decimal": 59050
+    },
+    {
+      "icon_id": "29300651",
+      "name": "pause",
+      "font_class": "pause",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "29300656",
+      "name": "play",
+      "font_class": "play",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "29300657",
+      "name": "repeat",
+      "font_class": "repeat",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "29300658",
+      "name": "play-previous",
+      "font_class": "play-previous",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "29300659",
+      "name": "play-next",
+      "font_class": "play-next",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "29300664",
+      "name": "sound-on",
+      "font_class": "sound-on",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
       "icon_id": "10593828",
       "name": "笔记本,记事本,本子,辅助方法_jurassic",
       "font_class": "jurassic_text",

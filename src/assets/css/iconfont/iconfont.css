@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3987336 */
-  src: url('iconfont.woff2?t=1682165764472') format('woff2'),
-       url('iconfont.woff?t=1682165764472') format('woff'),
-       url('iconfont.ttf?t=1682165764472') format('truetype');
+  src: url('iconfont.woff2?t=1685110668070') format('woff2'),
+       url('iconfont.woff?t=1685110668070') format('woff'),
+       url('iconfont.ttf?t=1685110668070') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,50 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-repeat-once:before {
+  content: "\ea47";
+}
+
+.icon-sound-off:before {
+  content: "\e615";
+}
+
+.icon-list-play:before {
+  content: "\e6ac";
+}
+
+.icon-search-music:before {
+  content: "\e6ab";
+}
+
+.icon-random-play:before {
+  content: "\e6aa";
+}
+
+.icon-pause:before {
+  content: "\e60f";
+}
+
+.icon-play:before {
+  content: "\e610";
+}
+
+.icon-repeat:before {
+  content: "\e611";
+}
+
+.icon-play-previous:before {
+  content: "\e612";
+}
+
+.icon-play-next:before {
+  content: "\e613";
+}
+
+.icon-sound-on:before {
+  content: "\e614";
 }
 
 .icon-jurassic_text:before {

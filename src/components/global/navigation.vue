@@ -44,7 +44,7 @@ export default {
         { name: "归类",pageName:"classify",  src: "/classify", icon: "icon-guanli"},
         { name: "随笔",pageName:"essay",  src: "/essay", icon: "icon-jurassic_text"},
         { name: "留言",pageName:"board",  src: "", icon: "icon-heiban"},
-        { name: "音乐",pageName:"music",  src: "", icon: "icon-yinle1"},
+        { name: "音乐",pageName:"music",  src: "/music", icon: "icon-yinle1"},
       ],
     };
   },
@@ -65,6 +65,7 @@ export default {
     },
     navigationFontColor: function () {
       switch (this.$route.path) {
+        case "/music":
         case "/home":
           return "FontcolorLightGrey";
         case "/articleContent": {

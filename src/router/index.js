@@ -7,6 +7,7 @@ import article from '../views/article.vue'
 import articleContent from '../views/articleContent.vue'
 import classify from '../views/classify.vue'
 import essay from '../views/essay.vue'
+import music from '../views/music.vue'
 import articleOverview from '../views/articleOverview.vue'
 
 Vue.use(VueRouter)
@@ -43,6 +44,11 @@ const routes = [
     path: '/articleContent',
     name: 'articleContent',
     component:articleContent,
+  },
+  {
+    path: '/music',
+    name: 'music',
+    component: music
   },
   {
     path: '/home',
