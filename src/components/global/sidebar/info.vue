@@ -23,15 +23,26 @@
 </template>
 
 <script>
+import { mapState,mapMutations } from 'vuex';
+
 export default {
-  // props:["infoData"],
   data(){
     return {
-      infoData:[]
+      info: [
+        { title: "文章", num: "64", src: "" },
+        { title: "标签", num: "90", src: "" },
+        { title: "分类", num: "18", src: "" },
+      ]
     }
   },
+  computed:{
+    ...mapState(['infoData'])
+  },
   created(){
-    this.infoData = this.$store.state.infoData;
+    this.setInfoData({infoData:this.info});
+  },
+  methods:{
+    ...mapMutations(['setInfoData'])
   }
 }
 </script>

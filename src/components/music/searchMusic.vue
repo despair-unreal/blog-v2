@@ -1,30 +1,20 @@
 <template>
   <div>
     <div class="search">
-      <input
-        type="text"
-        v-model="searchList.searchKeywords"
-        placeholder="搜索..."
-        @keyup.enter="search"
-      />
+      <input type="text" v-model="searchKeywords" placeholder="搜索..." @keyup.enter="search" />
       <div class="btns">
-        <i
-          class="iconfont icon-close"
-          @click="searchList.searchKeywords = ''"
-        ></i>
+        <i class="iconfont icon-close" @click="searchKeywords = ''"></i>
         <i class="iconfont icon-search" @click="search"></i>
       </div>
     </div>
-    <music-list
-      @loadingMore="loadingMore"
-      :listData="searchList"
-    ></music-list>
+    <music-list @loadingMore="loadingMore" :listData="searchList"></music-list>
   </div>
 </template>
 
 <script>
-import MusicList from "../music/musicList.vue";
-import { getSearchList } from "../../api/music.js";
+import MusicList from './musicList.vue';
+import { getSearchList } from '../../api/music.js';
+import { Music } from './Music.js';
 
 export default {
   components: {
@@ -33,63 +23,78 @@ export default {
   data() {
     return {
       searchList: {
-        name:"searchList",
+        name: 'searchList',
         musicList: [],
-        status: "",
-        needMore: true,
-        searchKeywords: "",
-        page: 0,
+        status: '',
+        hasMore: true,
       },
+      searchKeywords: '',
+      page: 0,
+      utils: new Music(this),
     };
+  },
+  watch: {
+    'searchList.musicList'(value) {
+      this.searchList.status = this.utils.setListStatus(value);
+    },
   },
   methods: {
     // 获取搜索歌曲
     getSearchListAPI() {
-      const keywords = this.searchList.searchKeywords;
-      const offset = this.searchList.page * 30;
+      const keywords = this.searchKeywords;
+      const offset = this.page * 30;
       return getSearchList({ keywords, offset });
     },
     async getSearchList() {
       try {
-        const { result } = await this.getSearchListAPI();
+        this.searchList.status = 'loading';
+        // const { songs: data, hasMore } = await this.getSearchListAPI().result;
+        const { result:{ songs: data, hasMore } } = await this.getSearchListAPI();
+        let result;
         // 歌曲数据
-        const oldData = result.songs;
-        const needKeys = ["id", "name", "duration", { artists: "name" }, { album:{artist:"img1v1Url"}}];
-        // 提取需要的属性
-        const needData = this.$utils.filterObjectInArray(oldData, needKeys);
-        // 准备替换属性名
-        const keyReplace = this.$parent.setKeyReplace(["id","name","duration","artists.name","album.artist.img1v1Url"]);
-        // 统一属性名
-        const newData = this.$utils.listDataFormat(needData, keyReplace);
-        // 加上音乐状态的属性
-        const musicList = this.$parent.setMusicState(newData);
-        // 是否有更多歌曲未展示
-        this.searchList.hasMore = result.hasMore;
-        // 搜索完成
-        this.searchList.status = "complete";
-        return musicList;
+        if (data) {
+          const needKeys = [
+            'id',
+            'name',
+            'duration',
+            { artists: 'name' },
+            { album: ['name', { artist: 'img1v1Url' }] },
+          ];
+          // 准备替换属性名
+          const keyReplace = this.utils.setKeyReplace([
+            'id',
+            'name',
+            'duration',
+            'artists.name',
+            'album.name',
+            'album.artist.img1v1Url',
+          ]);
+          // 整理处理获取到歌曲数据
+          const musicList = this.utils.setMusicData(data, needKeys, keyReplace);
+          // 是否有更多歌曲未展示
+          this.searchList.hasMore = hasMore;
+          // 搜索完成
+          result = musicList;
+        }
+        result = [];
+        return result;
       } catch (error) {
-        console.log(error);
-        this.searchList.status = this.$parent.catchError(error);
-        return [];
+        console.error(error);
+        return 'error';
       }
     },
     // 获取搜索数据
     async search() {
-      if (this.searchList.searchKeywords.trim().length !== 0) {
-        this.searchList.status = "loading";
-        this.searchList.musicList = await this.getSearchList();
-      }
+      this.searchKeywords.trim().length !== 0 && (this.searchList.musicList = await this.getSearchList());
     },
     // 加载更多数据
     async loadingMore() {
       if (this.searchList.hasMore) {
         // 当前搜索歌曲页数
-        this.searchList.page++;
+        this.page++;
         const moreData = await this.getSearchList();
-        const tmp = [...this.searchList.musicList, ...moreData];
         // 把数据按id去重
-        this.searchList.musicList = this.$utils.filterArrayByKey(tmp, "id");
+        this.searchList.musicList = this.$utils.filterArrayByKey([...this.searchList.musicList, ...moreData], 'id');
       }
     },
   },

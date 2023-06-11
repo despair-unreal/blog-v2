@@ -7,35 +7,20 @@
     </div>
     <div v-show="list.status !== 'complete'" class="loading">
       <div v-show="list.status === 'loading'">
-        <span
-          v-for="(item, index) in 'Loading'.split('')"
-          :key="index"
-          :style="{ animationDelay: `${index / 5}s` }"
-          >{{ item }}</span
-        >
-      </div>
-      <div v-show="list.status === 'error'">
-        <span
-          v-for="(item, index) in '加载失败，请重试'.split('')"
-          :key="index"
-          >{{ item }}</span
-        >
-      </div>
-      <div v-show="list.status === 404 || list.status === ''">
-        <span v-for="(item, index) in '空空如也~'.split('')" :key="index">{{
+        <span v-for="(item, index) in 'Loading'.split('')" :key="index" :style="{ animationDelay: `${index / 5}s` }">{{
           item
         }}</span>
       </div>
+      <div v-show="list.status === 'error'">
+        <span v-for="(item, index) in '加载失败，请重试'.split('')" :key="index">{{ item }}</span>
+      </div>
+      <div v-show="list.status === ''">
+        <span v-for="(item, index) in '空空如也~'.split('')" :key="index">{{ item }}</span>
+      </div>
     </div>
-    <ul
-      ref="listContainer"
-      v-show="list.status === 'complete'"
-      class="music-list"
-    >
+    <ul ref="listContainer" v-show="list.status === 'complete'" class="music-list">
       <li v-for="(item, index) in list.musicList" :key="item.id">
-        <span v-show="item.musicState === 'stop'" class="number">{{
-          index + 1
-        }}</span>
+        <span v-show="item.musicState === 'stop'" class="number">{{ index + 1 }}</span>
         <div v-show="item.musicState === 'loading'" class="number">
           <span class="loadingMusic"></span>
         </div>
@@ -52,92 +37,85 @@
               v-show="item.musicState === 'stop'"
               @click="playMusic(item, index)"
               title="播放"
-              class="iconfont icon-play"
-            ></i>
+              class="iconfont icon-play"></i>
             <i
-              v-if="list.name !== 'playList'" 
-              @click="$emit('addMusic', { item, index })"
+              v-if="list.name !== 'playList'"
+              @click="addMusicToList({ item })"
               title="下一首播放"
-              class="iconfont icon-close add"
-            ></i>
-            <i
-              v-else
-              @click="$emit('removeMusic', { id: item.id, index })"
-              title="移除"
-              class="iconfont icon-close"
-            ></i>
+              class="iconfont icon-close add"></i>
+            <i v-else @click="removeMusic(item.id)" title="移除" class="iconfont icon-close"></i>
           </div>
         </div>
         <span class="singer text-overflow">{{ item.artists }}</span>
-        <span class="time">{{
-          $utils.millisecondConversionTime(item.duration, [
-            "seconds",
-            "minutes",
-          ])
-        }}</span>
+        <span class="time">{{ $utils.millisecondConversionTime(item.duration, ['seconds', 'minutes']) }}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex';
 export default {
   props: {
-    listData: Object,
+    listData: Object
   },
   data() {
     return {
       isBottomFunc: null,
-      isLoading: null,
-      list: this.listData,
+      isLoading: null
     };
   },
+  computed: {
+    ...mapState(['playMusicList']),
+    list:function(){
+      return this.listData;
+    }
+  },
   methods: {
+    ...mapMutations(['addMusicToList', 'setCurrentMusic', 'setPlayMusicList']),
     // 判断滚动是否到达底部
     isBottom() {
       const handler = () => {
         const list = this.$refs.listContainer;
         // 滚动高度 + 可视窗口高度接近于元素总高度
         if (list.scrollHeight - (list.scrollTop + list.clientHeight) <= 200) {
-          this.$emit("loadingMore");
+          this.$emit('loadingMore');
         }
       };
-      return this.$utils.throttle(handler, 1000);
+      return this.$utils.throttle(handler, 1000)();
     },
     // 播放歌曲
     playMusic(item, index) {
       // 该歌曲处于未加载状态
-      if (item.musicState === "stop") {
+      if (item.musicState === 'stop') {
         // 设置该歌曲状态以及记录该歌曲在播放列表的播放位置
-        let par = null;
         switch (this.list.name) {
-          case "playList":
-            this.list.current = index;
-            par = this.$parent;
+          case 'playList':
+            this.setCurrentMusic({ type: 'setValue', index });
             break;
-          case "searchList":
+          case 'searchList':
             // 把该歌曲添加到播放列表中，位于当前播放歌曲的下一位
-            this.$bus.$emit("addMusic", { item, index });
-            par = this.$parent.$parent;
-            par.playList.current++;
+            this.addMusicToList({ item });
+            this.setCurrentMusic({ type: 'increatment' });
             break;
         }
-        // 获取歌曲链接
-        par.getMusicUrl(item.id);
       }
+    },
+    // 从播放列表中移除歌曲
+    removeMusic(id) {
+      // 移除歌曲
+      const newList = this.playMusicList.filter((value) => {
+        return value.id !== id;
+      });
+      this.setPlayMusicList({ musicList: newList });
     },
   },
   mounted() {
-    if (this.needMore) {
-      this.isBottomFunc = this.isBottom();
-      this.$refs.listContainer.addEventListener("scroll", this.isBottomFunc);
-    }
+    this.list.hasMore && this.$refs.listContainer.addEventListener('scroll', this.isBottom);
   },
   beforeDestroy() {
-    if (this.needMore) {
-      this.$refs.listContainer.removeEventListener("scroll", this.isBottomFunc);
-    }
-  },
+    this.list.hasMore && this.$refs.listContainer.removeEventListener('scroll', this.isBottom);
+  } 
 };
 </script>
 

@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store';
 //自定义工具
 import utils from './utils/util'
 //字体
@@ -18,26 +19,8 @@ Vue.prototype.$utils = utils
 //EventBus
 Vue.prototype.$bus = new Vue()
 
-Vue.prototype.$store = {
-  debug: false,
-  state: {
-  },
-  setMessageAction (newValue) {
-    if (this.debug) console.log('setMessageAction triggered with', newValue)
-    this.state.message = newValue
-  },
-  addToStateAction (value,key) {
-    if (this.debug) console.log('addToStateAction triggered with', value)
-    this.state[key] = value;
-  },
-  clearMessageAction () {
-    if (this.debug) console.log('clearMessageAction triggered')
-    this.state.message = ''
-  }
-}
-
-
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

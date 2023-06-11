@@ -25,7 +25,7 @@ export class Request{
                 // 状态码
                 const status = error.response.status;
                 if(status === 404)
-                    return Promise.reject(404);
+                    return Promise.reject(status);
             }
             else if(error.message === "Network Error"){
                 return Promise.reject("接口连接异常 Network Error");

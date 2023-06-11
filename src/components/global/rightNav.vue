@@ -19,18 +19,6 @@ import info from "./sidebar/info.vue";
 export default {
   components: { info },
   props: ["rightMenus","openrightnav"],
-  data() {
-    return {
-      infoData: [
-        { title: "文章", num: "64", src: "" },
-        { title: "标签", num: "90", src: "" },
-        { title: "分类", num: "18", src: "" },
-      ]
-    };
-  },
-  created() {
-    this.$store.addToStateAction(this.infoData, "infoData");
-  },
   methods:{
     closeRightNav:function () {
       this.$emit("closeRightNav");
