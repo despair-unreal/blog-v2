@@ -27,16 +27,12 @@ export default {
         musicList: [],
         status: '',
         hasMore: true,
+        loadingMore: false,
       },
       searchKeywords: '',
       page: 0,
       utils: new Music(this),
     };
-  },
-  watch: {
-    'searchList.musicList'(value) {
-      this.searchList.status = this.utils.setListStatus(value);
-    },
   },
   methods: {
     // 获取搜索歌曲
@@ -47,28 +43,16 @@ export default {
     },
     async getSearchList() {
       try {
-        this.searchList.status = 'loading';
         // const { songs: data, hasMore } = await this.getSearchListAPI().result;
-        const { result:{ songs: data, hasMore } } = await this.getSearchListAPI();
-        let result;
+        const {
+          result: { songs: data, hasMore },
+        } = await this.getSearchListAPI();
+        let result = [];
         // 歌曲数据
         if (data) {
-          const needKeys = [
-            'id',
-            'name',
-            'duration',
-            { artists: 'name' },
-            { album: ['name', { artist: 'img1v1Url' }] },
-          ];
+          const needKeys = ['id', 'name', 'duration', { artists: 'name' }, { album: 'name' }];
           // 准备替换属性名
-          const keyReplace = this.utils.setKeyReplace([
-            'id',
-            'name',
-            'duration',
-            'artists.name',
-            'album.name',
-            'album.artist.img1v1Url',
-          ]);
+          const keyReplace = this.utils.setKeyReplace(['id', 'name', 'duration', 'artists.name', 'album.name']);
           // 整理处理获取到歌曲数据
           const musicList = this.utils.setMusicData(data, needKeys, keyReplace);
           // 是否有更多歌曲未展示
@@ -76,23 +60,38 @@ export default {
           // 搜索完成
           result = musicList;
         }
-        result = [];
-        return result;
+        return Promise.resolve(result);
       } catch (error) {
         console.error(error);
-        return 'error';
+        return Promise.reject('error');
       }
     },
     // 获取搜索数据
     async search() {
-      this.searchKeywords.trim().length !== 0 && (this.searchList.musicList = await this.getSearchList());
+      if (this.searchKeywords.trim().length !== 0) {
+        try {
+          this.searchList.status = 'loading';
+          this.page = 0;
+          this.searchList.musicList = await this.getSearchList();
+          this.searchList.status = this.utils.setListStatus(this.searchList.musicList);
+        } catch (error) {
+          this.searchList.status = 'error';
+        }
+      }
     },
     // 加载更多数据
     async loadingMore() {
       if (this.searchList.hasMore) {
+        this.searchList.loadingMore = true;
         // 当前搜索歌曲页数
         this.page++;
-        const moreData = await this.getSearchList();
+        let moreData = [];
+        try {
+          moreData = await this.getSearchList();
+          this.searchList.loadingMore = false;
+        } catch (error) {
+          console.log('无法加载更多数据，请重试', error);
+        }
         // 把数据按id去重
         this.searchList.musicList = this.$utils.filterArrayByKey([...this.searchList.musicList, ...moreData], 'id');
       }

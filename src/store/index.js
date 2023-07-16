@@ -4,19 +4,23 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
-    currentMusicIndex: null,
+    currentMusicId: null,
     playMusicList: [],
     infoData: [],
   },
   getters: {
     // 当前播放音乐信息
-    getCurrentMusic(state) {
-      return state.playMusicList[state.currentMusicIndex];
+    getCurrentMusic(state, getters) {
+      return state.playMusicList && state.playMusicList[getters.getCurrentMusicIndex];
+    },
+    // 当前播放音乐索引
+    getCurrentMusicIndex(state) {
+      return state.playMusicList && state.playMusicList.findIndex((value) => value.id === state.currentMusicId);
     },
     // 列表最后一个索引
-    getPlayListLastIndex(state){
-      return state.playMusicList.length - 1;
-    }
+    getPlayListLastIndex(state) {
+      return state.playMusicList && state.playMusicList.length - 1;
+    },
   },
   mutations: {
     // 设置侧边栏的文章标签分类数据
@@ -28,19 +32,22 @@ const store = new Vuex.Store({
     setCurrentMusic(state, payload) {
       switch (payload.type) {
         case 'increment':
-          state.currentMusicIndex++;
+          state.currentMusicId = state.playMusicList[this.getters.getCurrentMusicIndex + 1].id;
           break;
         case 'decrement':
-          state.currentMusicIndex--;
+          state.currentMusicId = state.playMusicList[this.getters.getCurrentMusicIndex - 1].id;
           break;
         case 'setValue':
-          state.currentMusicIndex = payload.index;
+          state.currentMusicId = payload.id;
           break;
       }
     },
     // 修改当前播放音乐状态
     setCurrentMusicState(state, payload) {
-      state.playMusicList[state.currentMusicIndex].musicState = payload.state;
+      state.playMusicList[this.getters.getCurrentMusicIndex].musicState = payload.state;
+    },
+    addPropertyToCurrentMusic(state, payload){
+      Vue.set(state.playMusicList[this.getters.getCurrentMusicIndex],payload.key,payload.value);
     },
     // 修改播放列表
     setPlayMusicList(state, payload) {
@@ -55,7 +62,7 @@ const store = new Vuex.Store({
       if (isExist !== -1) {
         state.playMusicList.splice(isExist, 1);
       }
-      state.playMusicList.splice(state.currentMusicIndex + 1, 0, item);
+      state.playMusicList.splice(this.getters.getCurrentMusicIndex + 1, 0, item);
     },
   },
 });

@@ -7,7 +7,7 @@
       <i @click="playNext" title="下一首" class="iconfont icon-play-next"></i>
     </div>
     <div class="progress">
-      <audio ref="music" @error="musicError" @play="setPlay(true)" @pause="setPlay(false)" :loop="playMode.mode === 'repeat'" :src="musicUrl.url" :type="musicUrl.type" @timeupdate="getCurrentTime" @canplay="canplay" @ended="musicEnded">
+      <audio ref="music" @error="musicError" @play="isPlay = true" @pause="isPlay = false" :loop="playMode.mode === 'repeat'" :src="musicUrl.url" :type="musicUrl.type" @timeupdate="getCurrentTime" @canplay="canplay" @ended="musicEnded">
         <source :src="`https://music.163.com/song/media/outer/url?id=${musicUrl.id}.mp3`" type="mp3"></source>
       </audio>
       <span class="current-time">{{this.$utils.millisecondConversionTime(current.time, ["seconds","minutes"])}}</span>
@@ -35,18 +35,22 @@
 
 <script>
 import { mapMutations, mapState, mapGetters } from 'vuex';
+import { Music } from './Music.js';
 
 export default {
-  props: {
-    musicUrlData: Array,
-  },
   data() {
     return {
+      // 播放器状态
       isPlay: false,
+      // 音乐是否可以播放了
       isCanPlay: false,
+      // 音量条
       volumePixel: 0,
+      // 是否静音
       soundsOff: false,
+      // 缓冲进度
       buffered: 0,
+      // 进度条
       current: {
         time: 0,
         percent: 0,
@@ -61,12 +65,13 @@ export default {
           { mode: 'random', title: '随机播放', icon: 'icon-random-play' },
         ],
       },
+      utils: new Music(this),
     };
   },
 
   computed: {
-    ...mapState(['playMusicList', 'currentMusicIndex']),
-    ...mapGetters(['getPlayListLastIndex', 'getCurrentMusic']),
+    ...mapState(['playMusicList', 'currentMusicId']),
+    ...mapGetters(['getPlayListLastIndex', 'getCurrentMusic', 'getCurrentMusicIndex']),
     // 缓冲进度百分比
     bufferedPercent: function () {
       const per = (this.buffered / this.musicUrl.time) * 100;
@@ -75,70 +80,100 @@ export default {
     // 歌曲链接
     musicUrl: {
       get: function () {
-        if (this.musicUrlData.length > 0) {
-          // 提取需要的属性
-          const data = this.$utils.filterObjectInArray(this.musicUrlData, ['id', 'url', 'type', 'time']);
-          const { id, type, url, time } = data[0];
-          // 播放歌曲
-          return {
-            id: id,
-            type: type,
-            url: url,
-            time: time,
-          };
-        } else
-          return {
-            id: 0,
-            url: '',
-            type: '',
-            time: 0,
-          };
-      },
-      set: function (value) {
-        this.musicUrl.time = value;
+        const nullObj = {
+          id: null,
+          url: '',
+          type: '',
+          time: 0,
+        };
+        return this.getCurrentMusic?.urlMsg ? { ...this.getCurrentMusic.urlMsg } : nullObj;
       },
     },
   },
   watch: {
-    // 更换歌曲后修改歌曲时长，重置缓冲条和播放进度（只修改渲染出来显示的，不修改实际播放器）
-    'getCurrentMusic.id': function () {
-      this.isCanPlay = false;
-      this.buffered = 0;
-      this.current.time = 0;
-      this.current.percent = 0;
-      this.musicUrl.time = this.getCurrentMusic.duration;
-      this.pause();
+    // 更换歌曲后
+    currentMusicId: function (id) {
+      this.isPlay = false;
+      this.resetBar(id);
+      // 取消前一次未完成的请求
+      this.utils.cancel && this.utils.cancel();
+      // 当前获取音乐链接并记录
+      this.getCurrentMusic && !this.getCurrentMusic.urlMsg && this.setMusicUrl(id);
     },
     // 通过计算音量条长度占比来设置音量大小
     volumePixel: function () {
       this.$refs.music.volume = this.volumePixel / this.$refs.volume.offsetWidth;
     },
-    isPlay: function () {
-      this.$bus.$emit('playStateChanges', this.isPlay);
-      const state = this.isPlay ? 'play' : 'pause';
+    isPlay: function (value) {
+      this.$bus.$emit('playStateChanges', value);
+      const state = value ? 'play' : 'pause';
       // 当前播放音乐状态为非加载状态时：可以更改状态
-      // 当前播放音乐状态为加载状态时：isPlay为true（可播放），可以更改状态，否则说明音乐还没有加载完毕不可更改其状态
-      (this.getCurrentMusic.musicState !== 'loading' || state === 'play') && this.setCurrentMusicState({ state });
+      // 当前播放音乐状态为加载状态时：isPlay为true（播放中），可以更改状态，否则说明音乐还没有加载完毕不可更改其状态
+      this.getCurrentMusic &&
+        (this.getCurrentMusic.musicState !== 'loading' || state === 'play') &&
+        this.setCurrentMusicState({ state });
     },
+    'current.time': function(value){
+      this.$bus.$emit('currentTime', value);
+    }
   },
   methods: {
-    ...mapMutations(['setCurrentMusic', 'setCurrentMusicState']),
-    // 监听设置播放器的播放状态
-    setPlay(boolean) {
-      this.isPlay = boolean;
+    ...mapMutations(['setCurrentMusic', 'setCurrentMusicState', 'setPlayMusicList', 'addPropertyToCurrentMusic']),
+    // 修改歌曲时长，重置缓冲条和播放进度（只修改渲染出来显示的，不修改实际播放器）
+    resetBar(id) {
+      // 设置加载状态
+      id && this.setMusicLoadingStatus();
+      this.isCanPlay = false;
+      // 缓冲条
+      this.buffered = 0;
+      // 进度条
+      this.current.time = 0;
+      this.current.percent = 0;
+      // 歌曲时长
+      this.musicUrl.time = this.getCurrentMusic?.duration || 0;
+    },
+    async setMusicUrl(id) {
+      try {
+        const data = await this.utils.getMusicUrlAndLyric(id, ['url']);
+        const value = data.url.value || data.url.reason;
+        if (data.url.status === 'fulfilled') {
+          const filterData = this.$utils.filterObjectInArray(value, ['id', 'url', 'type', 'time']);
+          const urlData = { ...filterData[0] };
+          this.addPropertyToCurrentMusic({ key: 'urlMsg', value: urlData });
+        } else if (value !== '请求被取消') throw new Error(value);
+      } catch (error) {
+        window.alert('加载失败!' + error);
+        this.setCurrentMusicState({ state: 'stop' });
+      }
+    },
+    // 重置列表中所有歌曲的状态并单独给当前播放歌曲设置加载状态
+    setMusicLoadingStatus() {
+      const newList = this.playMusicList.map((value, index) => {
+        value.musicState = index === this.getCurrentMusicIndex ? 'loading' : 'stop';
+        return value;
+      });
+      this.setPlayMusicList({ musicList: newList });
     },
     // 音频就绪状态达到可以播放
     canplay() {
       this.isCanPlay = true;
       this.play();
     },
-    // 播放音乐
+    // 音频就绪/点击播放触发
     play() {
-      if (this.isCanPlay) {
+      if (this.currentMusicId) {
+        if(this.musicUrl.url)
+          // 播放音乐
+          this.isCanPlay && this.$refs.music.paused && this.$refs.music.play();
+        else if(this.getCurrentMusic.musicState === 'stop'){
+          // 重新获取歌曲数据
+          this.setMusicLoadingStatus();
+          this.setMusicUrl(this.currentMusicId);
+        }
+      } else if (this.playMusicList.length > 0) {
         // 初始化播放器链接
-        this.musicUrl.url
-          ? this.$refs.music.paused && this.$refs.music.play()
-          : this.setCurrentMusic({ type: 'setValue', index: 0 });
+        const id = this.playMusicList[0].id;
+        this.playMusicList.length > 0 && this.setCurrentMusic({ type: 'setValue', id });
       }
     },
     // 播放状态下暂停音乐
@@ -183,24 +218,25 @@ export default {
         case 'repeat':
         case 'list-loop': {
           // 当前播放位置在最后一首时，下一首重置到第一首歌曲
-          this.currentMusicIndex < this.getPlayListLastIndex
+          this.getCurrentMusicIndex < this.getPlayListLastIndex
             ? this.setCurrentMusic({ type: 'increment' })
-            : this.setCurrentMusic({ type: 'setValue', index: 0 });
+            : this.setCurrentMusic({ type: 'setValue', id: this.playMusicList[0].id });
           break;
         }
         // 随机播放
         case 'random': {
           const index = Math.floor(Math.random() * this.getPlayListLastIndex + 1);
-          this.setCurrentMusic({ type: 'setValue', index });
+          this.setCurrentMusic({ type: 'setValue', id: this.playMusicList[index].id });
           break;
         }
       }
     },
     // 播放上一首歌曲
     playPrevious() {
-      this.currentMusicIndex > 0 && this.setCurrentMusic({ type: 'decrement' });
+      if (this.getCurrentMusicIndex > 0) this.setCurrentMusic({ type: 'decrement' });
       // 当前播放位置在第一首时，下一首设置为最后一首歌曲
-      this.currentMusicIndex === 0 && this.setCurrentMusic({ type: 'setValue', index: this.getPlayListLastIndex });
+      else if (this.getCurrentMusicIndex === 0)
+        this.setCurrentMusic({ type: 'setValue', id: this.playMusicList[this.getPlayListLastIndex].id });
     },
     // 更换音乐播放模式
     setMode(index) {
@@ -301,6 +337,7 @@ export default {
           const up = () => {
             // 设置进度 currentTime单位为秒 this.musicUrl.time单位为毫秒 this.current.percent为百分制（没带百分号）
             this.$refs.music.currentTime = (this.musicUrl.time * this.current.percent) / 100000;
+            this.$bus.$emit('timeChange');
             // 解除监听
             this.current.isAdjust = false;
             window.removeEventListener('mousemove', move);

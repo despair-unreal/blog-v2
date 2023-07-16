@@ -19,7 +19,7 @@
       </div>
     </div>
     <ul ref="listContainer" v-show="list.status === 'complete'" class="music-list">
-      <li v-for="(item, index) in list.musicList" :key="item.id">
+      <li :class="{ active: currentMusicId === item.id }" v-for="(item, index) in list.musicList" :key="item.id">
         <span v-show="item.musicState === 'stop'" class="number">{{ index + 1 }}</span>
         <div v-show="item.musicState === 'loading'" class="number">
           <span class="loadingMusic"></span>
@@ -33,13 +33,9 @@
         <div class="name">
           <span class="text-overflow">{{ item.name }}</span>
           <div class="control-btn">
+            <i v-show="item.musicState === 'stop'" @click="playMusic(item)" title="播放" class="iconfont icon-play"></i>
             <i
-              v-show="item.musicState === 'stop'"
-              @click="playMusic(item, index)"
-              title="播放"
-              class="iconfont icon-play"></i>
-            <i
-              v-if="list.name !== 'playList'"
+              v-if="list.name === 'searchList'"
               @click="addMusicToList({ item })"
               title="下一首播放"
               class="iconfont icon-close add"></i>
@@ -49,6 +45,12 @@
         <span class="singer text-overflow">{{ item.artists }}</span>
         <span class="time">{{ $utils.millisecondConversionTime(item.duration, ['seconds', 'minutes']) }}</span>
       </li>
+      <li v-show="list.hasMore" class="loading-more">
+        <span>加载更多数据中</span><span class="loadingMusic"></span>
+      </li>
+      <li v-if="list.name === 'searchList'" v-show="!list.hasMore" class="loading-more">
+        <span>暂无更多数据</span>
+      </li>
     </ul>
   </div>
 </template>
@@ -57,22 +59,30 @@
 import { mapMutations, mapState } from 'vuex';
 export default {
   props: {
-    listData: Object
+    listData: Object,
   },
   data() {
     return {
       isBottomFunc: null,
-      isLoading: null
+      isLoading: null,
     };
   },
   computed: {
-    ...mapState(['playMusicList']),
-    list:function(){
+    ...mapState(['playMusicList', 'currentMusicId']),
+    list: function () {
       return this.listData;
+    },
+  },
+  watch:{
+    'list.status':function(status){
+      // 搜索时让歌曲列表返回顶部
+      if(this.list.name === 'searchList' && status === 'loading'){
+        this.$refs.listContainer.scrollTop = 0;
+      }
     }
   },
   methods: {
-    ...mapMutations(['addMusicToList', 'setCurrentMusic', 'setPlayMusicList']),
+    ...mapMutations(['addMusicToList', 'setCurrentMusic', 'setPlayMusicList', 'setCurrentMusicState']),
     // 判断滚动是否到达底部
     isBottom() {
       const handler = () => {
@@ -82,27 +92,32 @@ export default {
           this.$emit('loadingMore');
         }
       };
-      return this.$utils.throttle(handler, 1000)();
+      return this.$utils.throttle(handler, 1000);
     },
     // 播放歌曲
-    playMusic(item, index) {
+    playMusic(item) {
       // 该歌曲处于未加载状态
       if (item.musicState === 'stop') {
         // 设置该歌曲状态以及记录该歌曲在播放列表的播放位置
         switch (this.list.name) {
           case 'playList':
-            this.setCurrentMusic({ type: 'setValue', index });
+            this.setCurrentMusic({ type: 'setValue', id: item.id });
             break;
           case 'searchList':
             // 把该歌曲添加到播放列表中，位于当前播放歌曲的下一位
             this.addMusicToList({ item });
-            this.setCurrentMusic({ type: 'increatment' });
+            this.setCurrentMusic({ type: 'increment' });
             break;
         }
       }
     },
     // 从播放列表中移除歌曲
     removeMusic(id) {
+      // 如果移除的是当前播放的歌曲，就设置下一首歌曲为当前播放
+      if (this.currentMusicId === id) {
+        this.setCurrentMusicState({ state: 'stop' });
+        this.setCurrentMusic({ type: 'increment' });
+      }
       // 移除歌曲
       const newList = this.playMusicList.filter((value) => {
         return value.id !== id;
@@ -111,11 +126,12 @@ export default {
     },
   },
   mounted() {
-    this.list.hasMore && this.$refs.listContainer.addEventListener('scroll', this.isBottom);
+    this.isBottomFunc = this.isBottom();
+    this.list.hasMore && this.$refs.listContainer.addEventListener('scroll', this.isBottomFunc);
   },
   beforeDestroy() {
-    this.list.hasMore && this.$refs.listContainer.removeEventListener('scroll', this.isBottom);
-  } 
+    this.list.hasMore && this.$refs.listContainer.removeEventListener('scroll', this.isBottomFunc);
+  },
 };
 </script>
 
@@ -174,17 +190,24 @@ export default {
   width: 30px;
   text-align: center;
 }
-.music-list li .number > * {
+.music-list li .number > *,
+.music-list li.loading-more .loadingMusic {
   display: inline-block;
   width: 15px;
   height: 15px;
 }
-.music-list li .number .loadingMusic {
+.music-list li .loadingMusic {
   border: 1px solid transparent;
   border-color: transparent #fff transparent #fff;
   animation: rotate-loading 1.5s linear 0s infinite normal;
   transform-origin: 50% 50%;
   border-radius: 100%;
+}
+.music-list li.loading-more{
+  justify-content: center;
+}
+.music-list li.loading-more .loadingMusic {
+  margin-left: 10px;
 }
 .music-list li .number .playMusic {
   background: url(data:image/gif;base64,R0lGODlhCgAKAIABAP///////yH/C05FVFNDQVBFMi4wAwEAAAAh+QQJBAABACwAAAAACgAKAAACEIyPqcsM4GB4iM4nLc5c8wIAIfkECQQAAQAsAAAAAAoACgAAAhGMj6mrAOxMPNPVFyy+V1rvFQAh+QQJBAABACwAAAAACgAKAAACE4yPqQew0UxkDrY6L96Zb3mBYAEAIfkECQQAAQAsAAAAAAoACgAAAhSMjwiQt/YcCyvaCmfV/GZPYWFWAAAh+QQJBAABACwAAAAACgAKAAACFIyPeQDIxl6QsU1bIY5a0/15m1YAACH5BAkEAAEALAAAAAAKAAoAAAIUjI+ZAMpsYHhtVhrvy1n6bXVaVgAAIfkECQQAAQAsAAAAAAoACgAAAhOMjwCYy6aeioFOZyfEuvK8gV4BACH5BAkEAAEALAAAAAAKAAoAAAISjI+ZAGrsAlysSVuxnry+rX0FACH5BAkEAAEALAAAAAAKAAoAAAIRjI+pawDs4EsuBlsnrk3z6xUAIfkECQQAAQAsAAAAAAoACgAAAhCMj6nLCMBehOnJcC3N1vACACH5BAkEAAEALAAAAAAKAAoAAAIPjI+py50AGJTxwTrDxbwAACH5BAkEAAEALAAAAAAKAAoAAAIPjI+py+0JAIuGHoujDLkAACH5BAkEAAEALAAAAAAKAAoAAAIQjI+py+0NAIqGhmgzrvKCAgAh+QQJBAABACwAAAAACgAKAAACD4yPqcvdABg081R4Y8A6FwA7LyogIHx4R3YwMHxkNDJiOTgyYzhjM2YwYWExNzcxNDk4OTU2ZjY3ODc0MSAqLw==)
@@ -209,6 +232,7 @@ export default {
   display: inline-block;
 }
 .music-list li .name .control-btn i {
+  display: inline-block;
   margin-right: 10px;
   opacity: 0;
   transition: all 0.2s;
@@ -223,7 +247,8 @@ export default {
 .music-list li {
   transition: all 0.2s;
 }
-.music-list li:hover {
+.music-list li:hover,
+.music-list li.active {
   color: #eee;
 }
 .loading {

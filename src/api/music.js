@@ -9,5 +9,7 @@ export const getDefalutPlayList = params => musicService.get('/playlist/track/al
 export const getSearchList = params => musicService.get('/search', params);
 // 获取歌曲URL
 export const getMusicUrlAPI = (params,cancelToken) => musicService.get('/song/url',params,cancelToken);
+// 获取歌曲详情ids
+export const getMusicDetailAPI = (params,cancelToken) => musicService.get('/song/detail',params,cancelToken);
 // 获取逐字歌词
 export const getMusicLyricAPI = (params,cancelToken) => musicService.get('/lyric/new',params,cancelToken);

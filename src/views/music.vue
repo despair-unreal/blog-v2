@@ -11,7 +11,8 @@
             <span @click="current = 0" :class="['option', { active: current === 0 }]">播放列表</span>
             <span @click="current = 1" :class="['option', { active: current === 1 }]">歌曲搜索</span>
             <span @click="current = 2" :class="['option', { active: current === 2 }]">我的歌单</span>
-            <span v-show="current === 0" @click="clearPlayList({ musicList: [] })" class="other">清空列表</span>
+            <span v-show="current === 0" @click="clearPlayList" class="other">清空列表</span>
+            <span v-show="current === 0" @click="$refs.playList.setDefalutPlayList()" class="other">重载播单</span>
             <span v-show="current === 2" class="other">登录</span>
           </div>
           <div v-show="current === 0" class="show-select">
@@ -23,9 +24,9 @@
             <!-- <music-list :list="playList"></music-list> -->
           </div>
         </div>
-        <right :musicLyricData="musicLyric"></right>
+        <right></right>
       </div>
-      <music-bar ref="musicBar" :musicUrlData="musicUrl"></music-bar>
+      <music-bar></music-bar>
     </main>
   </div>
 </template>
@@ -35,8 +36,7 @@ import musicBar from '../components/music/musicBar.vue';
 import right from '../components/music/right.vue';
 import playList from '../components/music/playList.vue';
 import searchMusic from '../components/music/searchMusic.vue';
-import { mapMutations, mapState, mapGetters } from 'vuex';
-import { Music } from '../components/music/Music.js';
+import { mapMutations } from 'vuex';
 
 export default {
   components: {
@@ -47,42 +47,17 @@ export default {
   },
   data() {
     return {
-      current: 0,
-      musicUrl: [],
-      musicLyric: '',
-      utils: new Music(this),
+      current: 0
     };
-  },
-  computed: {
-    ...mapState(['playMusicList', 'currentMusicIndex']),
-    ...mapGetters(['getCurrentMusic']),
-  },
-  watch: {
-    // 监听当前播放歌曲id 切歌时获取歌曲链接并且为其设置加载状态
-    'getCurrentMusic.id': function () {
-      // 重置列表中所有歌曲的状态并单独给当前播放歌曲设置加载状态
-      const newList = this.playMusicList.map((value, index) => {
-        value.musicState = index === this.currentMusicIndex ? 'loading' : 'stop';
-        return value;
-      });
-      this.clearPlayList({ musicList: newList });
-      // 获取歌曲链接和歌词 播放歌曲
-      this.getMusicData();
-    },
   },
   methods: {
     // 清空播放列表
-    ...mapMutations({ clearPlayList: 'setPlayMusicList' }),
-    ...mapMutations(['setCurrentMusicState']),
-    // 获取歌曲链接和歌词 播放歌曲
-    async getMusicData() {
-      const data = await this.utils.getMusicUrlAndLyric(this.getCurrentMusic.id);
-      if (data) {
-        typeof data === 'object' && Object.keys(data).length !== 0
-          ? ({ urlData: this.musicUrl, lyricData: this.musicLyric } = data)
-          : this.setCurrentMusicState({ state: 'stop' });
-      }
-    },
+    ...mapMutations(['setPlayMusicList', 'setCurrentMusic']),
+    // 清空列表
+    clearPlayList() {
+      this.setPlayMusicList({ musicList: [] });
+      this.setCurrentMusic({ type: 'setValue', id: null });
+    }
   },
 };
 </script>
@@ -128,14 +103,14 @@ main {
   z-index: 3;
 }
 main .music-content {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
   overflow: hidden;
 }
 main .music-content .list-option {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
