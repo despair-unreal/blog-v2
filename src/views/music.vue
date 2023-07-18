@@ -1,9 +1,12 @@
 <template>
   <div class="container">
-    <video class="list-background" autoplay muted loop>
-      <source src="@/assets/images/music/music_background.mp4" type="video/mp4" />
-    </video>
-    <div id="mask"></div>
+    <div class="bg-container">
+      <video class="list-background" poster="@/assets/images/music/music_background.jpg" autoplay muted loop>
+        <source src="@/assets/images/music/music_background.mp4" type="video/mp4" />
+      </video>
+      <div ref="cover" :class="['list-background',{hide:!bgLoad}]" />
+      <div id="mask"></div>
+    </div>
     <main>
       <div class="music-content">
         <div class="list-option">
@@ -36,7 +39,7 @@ import musicBar from '../components/music/musicBar.vue';
 import right from '../components/music/right.vue';
 import playList from '../components/music/playList.vue';
 import searchMusic from '../components/music/searchMusic.vue';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -47,8 +50,25 @@ export default {
   },
   data() {
     return {
-      current: 0
+      current: 0,
+      bgLoad:false
     };
+  },
+  computed: {
+    ...mapGetters(['getCurrentMusic']),
+    background() {
+      return this.getCurrentMusic?.cover || '';
+    },
+  },
+  watch: {
+    async background(src) {
+      if (src) {
+        // 等加载完背景在显示
+        await this.$utils.loadImg(src);
+        this.$refs.cover.style.backgroundImage = `url(${src})`;
+        this.bgLoad = true;
+      }
+    },
   },
   methods: {
     // 清空播放列表
@@ -57,30 +77,57 @@ export default {
     clearPlayList() {
       this.setPlayMusicList({ musicList: [] });
       this.setCurrentMusic({ type: 'setValue', id: null });
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
 .container {
+  position: relative;
   height: 100vh;
   width: 100vw;
+  user-select: none;
+}
+.bg-container {
   background-image: url(~@/assets/images/music/music_background.jpg);
   background-size: cover;
   background-position: center;
-  user-select: none;
+  overflow: hidden;
 }
-video {
-  display: block;
+.bg-container,
+.list-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+}
+.list-background {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  filter: blur(5px);
+  filter: blur(18px);
   z-index: 1;
+}
+div.list-background {
+  transform: scale(1.5);
+  transition: all 0.6s;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+}
+div.list-background.hide {
+  opacity: 0;
+}
+@keyframes bg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 #mask {
   opacity: 0.4;

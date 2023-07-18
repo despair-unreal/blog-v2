@@ -90,7 +90,7 @@ export default {
     },
     lyric() {
       this.$nextTick(() => {
-        // 获取歌词父容器的高度
+        // 滚动到歌词最上方的位置并记录坐标
         this.$refs.container.scrollIntoView({
           block: 'start',
         });
@@ -134,6 +134,7 @@ export default {
           y = -(pre2Dom.offsetTop + pre2Dom.clientHeight / 2);
         } else y = 30;
         this.translateY = y;
+        // 保持歌词滚动位置
         this.$refs.lyric.scroll({
           top: this.scrollTop,
           behavior: 'smooth'
