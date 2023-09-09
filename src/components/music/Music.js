@@ -51,34 +51,34 @@ export class Music {
     const taskList = needApi.map((apiName) => apiList.get(apiName));
     const taskResult = await Promise.allSettled(taskList.map((task) => task()));
     // 处理请求结果
-    const getLyric = (obj)=>{
+    const getLyric = (obj) => {
       // 逐字歌词 || 标准歌词（逐行） || 中文翻译歌词
       const objLyric = {
-        'yrc':obj.value.yrc?.lyric,
-        'lrc':obj.value.lrc?.lyric,
-        'tlyric':obj.value.tlyric?.lyric
+        yrc: obj.value.yrc?.lyric,
+        lrc: obj.value.lrc?.lyric,
+        tlyric: obj.value.tlyric?.lyric,
       };
-      const lyric = Object.keys(objLyric).reduce((lyric,key) =>{
-        return objLyric[key] ? {...lyric, [key] : objLyric[key]} : lyric;
-      },{});
+      const lyric = Object.keys(objLyric).reduce((lyric, key) => {
+        return objLyric[key] ? { ...lyric, [key]: objLyric[key] } : lyric;
+      }, {});
       return lyric;
     };
     // api对应数据
     const apiValue = new Map([
       // 歌曲链接
-      ['url', (obj)=>obj.value.data],
+      ['url', (obj) => obj.value.data],
       // 歌词
-      ['lyric', (obj)=>getLyric(obj)],
+      ['lyric', (obj) => getLyric(obj)],
       // 歌曲详情
-      ['detail', (obj)=>obj.value.songs],
+      ['detail', (obj) => obj.value.songs],
     ]);
-    const result = taskResult.reduce((result,obj,index)=>{
+    const result = taskResult.reduce((result, obj, index) => {
       const apiName = needApi[index];
       if (obj.status === 'fulfilled') {
         obj.value = apiValue.get(apiName)(obj);
       }
-      return {...result,[apiName]:obj};
-    },{});
+      return { ...result, [apiName]: obj };
+    }, {});
     return Promise.resolve(result);
   }
 }

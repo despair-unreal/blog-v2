@@ -4,9 +4,16 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
-    currentMusicId: null,
-    playMusicList: [],
-    infoData: [],
+    currentMusicId: null, // 播放id
+    currentTime: 0,       // 播放进度
+    playMusicList: [],    // 播放列表
+    mode: 'list-loop',    // 播放模式
+    isVerbatim:true,      // 是否逐字
+    isPlay: false,        // 播放状态
+    buffered: 0,          // 缓冲进度
+    volumeLevel:1,        // 音量大小
+    soundsOff:false,      // 是否静音
+    infoData: [],         // 文章标签分类数据
   },
   getters: {
     // 当前播放音乐信息
@@ -28,6 +35,33 @@ const store = new Vuex.Store({
       // state是必须默认参数
       state.infoData = payload.infoData;
     },
+    // 更改播放模式
+    setPlayMode(state, payload) {
+      state.mode = payload.mode;
+    },
+    // 设置是否开启逐字歌词
+    setVerbatim(state, verbatim){
+      state.isVerbatim = verbatim;
+    },
+    // 设置音量
+    setVolumeLevel(state, volumeLevel){
+      state.volumeLevel = volumeLevel;
+    },
+    setSoundsOff(state, soundsOff){
+      state.soundsOff = soundsOff;
+    },
+    // 更改播放状态
+    setPlayState(state, isPlay) {
+      state.isPlay = isPlay;
+    },
+    // 更新当前播放时间
+    setCurrentTime(state, time) {
+      state.currentTime = time;
+    },
+    // 更新缓冲进度
+    setBuffered(state, buffered) {
+      state.buffered = buffered;
+    },
     // 更改当前播放音乐（index）
     setCurrentMusic(state, payload) {
       switch (payload.type) {
@@ -46,8 +80,9 @@ const store = new Vuex.Store({
     setCurrentMusicState(state, payload) {
       state.playMusicList[this.getters.getCurrentMusicIndex].musicState = payload.state;
     },
-    addPropertyToCurrentMusic(state, payload){
-      Vue.set(state.playMusicList[this.getters.getCurrentMusicIndex],payload.key,payload.value);
+    // 新增键值对
+    addPropertyToCurrentMusic(state, payload) {
+      Vue.set(state.playMusicList[this.getters.getCurrentMusicIndex], payload.key, payload.value);
     },
     // 修改播放列表
     setPlayMusicList(state, payload) {

@@ -12,6 +12,7 @@
   -webkit-box-orient: vertical;
   word-break: break-all;
   overflow: hidden;
+  /* -webkit-line-clamp: 1; */
 }
 
 .card-box {

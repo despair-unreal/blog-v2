@@ -1,8 +1,9 @@
 export default {
     //加载图片
-    loadImg: function (src) {
+    loadImg: function (src,crossOrigin) {
         return new Promise((resolve) => {
             const img = new Image();
+            crossOrigin && (img.crossOrigin = crossOrigin); //需要图片跨域支持
             img.onload = () => resolve(img);
             img.src = src;
         });

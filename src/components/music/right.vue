@@ -1,86 +1,96 @@
 <template>
-  <div class="right">
-    <div class="info">
-      <div class="disc-cover">
-        <div :class="['CD', { rotate: play }]">
-          <img class="disc" src="~@/assets/images/music/placeholder_disk_play_song.png" />
+  <div>
+    <div class="right">
+      <div class="info">
+        <div class="disc-cover">
+          <div :class="['CD', { rotate: isPlay }]">
+            <img class="disc" src="~@/assets/images/music/placeholder_disk_play_song.png" />
+            <img
+              ref="cover"
+              :class="['cover', { hidden: hiddenCover }]"
+              @error="$refs.cover.src = ''"
+              @load="hiddenCover = false"
+              :src="cover || ''" />
+          </div>
+          <img :class="['needle', { playNeedle: isPlay }]" src="~@/assets/images/music/needle-ip6.png" />
           <img
-            ref="cover"
-            :class="['cover', { hidden: hiddenCover }]"
-            @error="$refs.cover.src = ''"
+            ref="bag"
+            :class="['bag', { hidden: hiddenCover }]"
+            @error="$refs.bag.src = ''"
             @load="hiddenCover = false"
             :src="cover || ''" />
         </div>
-        <img :class="['needle', { playNeedle: play }]" src="~@/assets/images/music/needle-ip6.png" />
-        <img
-          ref="bag"
-          :class="['bag', { hidden: hiddenCover }]"
-          @error="$refs.bag.src = ''"
-          @load="hiddenCover = false"
-          :src="cover || ''" />
+        <p v-if="msg.name">歌曲名：{{ msg.name }}</p>
+        <p v-if="msg.artists">歌手名：{{ msg.artists }}</p>
+        <p v-if="msg.album">专辑名：{{ msg.album }}</p>
       </div>
-      <p v-if="msg.name">歌曲名：{{ msg.name }}</p>
-      <p v-if="msg.artists">歌手名：{{ msg.artists }}</p>
-      <p v-if="msg.album">专辑名：{{ msg.album }}</p>
-    </div>
-    <div class="lyric" ref="lyric">
-      <div class="no-lyric" v-show="!lyric">暂无歌词</div>
-      <div ref="container" class="container" v-show="lyric">
-        <div
-          ref="line"
-          v-for="([time, line], lineIndex) in lyric.yrc || lyric.lrc"
-          :key="lineIndex"
-          :style="getLineStyle(lineIndex)"
-          :class="['line', { active: activeLine === lineIndex }]">
-          <!-- 逐字yrc -->
-          <div v-if="typeof line === 'object'">
-            <span
-              :ref="lineIndex === activeLine && 'activeWord'"
-              :class="['word', { active: lineIndex === activeLine }, { stop: lineIndex === activeLine && !play }]"
-              :style="[
-                { animationDuration: `${lineIndex === activeLine ? duration : 0}ms` },
-                { animationDelay: `${lineIndex === activeLine ? delay : 0}ms` },
-              ]"
-              v-for="([{ wordTime, duration, delay }, word], wordIndex) in line"
-              :key="wordIndex"
-              >{{ word }}</span
-            >
-          </div>
-          <!-- 逐行lrc -->
-          <div v-else>
-            {{ line }}
-          </div>
-          <div v-if="lyric.tlyric && lineTimes.lrc" class="translate-line">
-            {{ lyric.tlyric.get(lineTimes.lrc[lineIndex]) }}
+      <div class="lyric" ref="lyric">
+        <div class="no-lyric" v-show="!lyric">暂无歌词</div>
+        <div ref="container" class="container" v-show="lyric">
+          <div
+            ref="line"
+            v-for="([time, line], lineIndex) in showLyric"
+            :key="lineIndex"
+            :style="getLineStyle(lineIndex)"
+            :class="['line', { active: activeLine === lineIndex }]">
+            <!-- 逐字yrc -->
+            <div ref="yrcLine" v-if="typeof line === 'object'">
+              <span
+                :ref="lineIndex === activeLine && 'activeWord'"
+                :class="['word', { active: lineIndex === activeLine }, { stop: lineIndex === activeLine && !isPlay }]"
+                :style="[
+                  { animationDuration: `${lineIndex === activeLine ? duration : 0}ms` },
+                  { animationDelay: `${lineIndex === activeLine ? delay : 0}ms` },
+                ]"
+                v-for="([{ wordTime, duration, delay }, word], wordIndex) in line"
+                :key="wordIndex"
+                >{{ word }}</span
+              >
+            </div>
+            <!-- 逐行lrc -->
+            <div v-else>
+              {{ line }}
+            </div>
+            <div v-if="lyric.tlyric && lineTimes.lrc" class="translate-line">
+              {{ lyric.tlyric.get(lineTimes.lrc[lineIndex]) }}
+            </div>
           </div>
         </div>
       </div>
+      <div class="other">
+        本页面接口源自<a href="https://github.com/Binaryify/NeteaseCloudMusicApi">NeteaseCloudMusicApi</a>
+      </div>
     </div>
-    <div class="other">
-      本页面接口源自<a href="https://github.com/Binaryify/NeteaseCloudMusicApi">NeteaseCloudMusicApi</a>
-    </div>
+    <detail :cover="cover" :msg="msg">
+      <template v-slot:lyric>
+        <div v-if="lineTimes.lrc" v-html="$refs.line[activeLine].innerHTML"></div>
+      </template>
+    </detail>
   </div>
 </template>
 
 <script>
+import detail from './detail.vue';
 import { mapGetters, mapState, mapMutations } from 'vuex';
 import { Music } from './Music.js';
 
 export default {
+  components: {
+    detail,
+  },
   data() {
     return {
+      timeChange: false,
       activeLine: 0,
       translateY: 30,
-      scrollTop:0,
-      currentTime: 0,
-      play: false,
+      scrollTop: 0,
       hiddenCover: true,
       utils: new Music(this),
     };
   },
   computed: {
     ...mapGetters(['getCurrentMusic']),
-    ...mapState(['currentMusicId']),
+    ...mapState(['currentMusicId', 'currentTime', 'isPlay', 'isVerbatim']),
     msg() {
       const { name = '', artists = '', album = '' } = this.getCurrentMusic || {};
       return { name, artists, album };
@@ -91,12 +101,17 @@ export default {
     lyric() {
       this.$nextTick(() => {
         // 滚动到歌词最上方的位置并记录坐标
-        this.$refs.container.scrollIntoView({
-          block: 'start',
-        });
+        const scrollTop = -this.$refs.container.clientHeight + this.$refs.lyric.clientHeight;
+        this.$refs.lyric.scrollTop = scrollTop;
         this.scrollTop = this.$refs.lyric.scrollTop;
       });
+      // lyric.yrc || lyric.lrc
       return this.getCurrentMusic?.lyric || '';
+    },
+    // 显示的歌词
+    showLyric() {
+      if (this.lyric) return this.isVerbatim ? this.lyric.yrc || this.lyric.lrc : this.lyric.lrc;
+      else return '';
     },
     lineTimes() {
       // 歌词每行时间数组
@@ -115,14 +130,23 @@ export default {
       this.reset();
       // 取消前一次未完成的请求
       this.utils.cancel && this.utils.cancel();
+      if(!id) return;
+      // 请求列表
+      const task = [];
+      !this.getCurrentMusic?.cover && task.push('detail');
+      !this.getCurrentMusic?.lyric && task.push('lyric');
       // 获取封面和歌词的数据
-      const data = await this.utils.getMusicUrlAndLyric(id, ['detail', 'lyric']);
+      const data = await this.utils.getMusicUrlAndLyric(id, task);
       // 封面
-      const detail = data.detail.value || data.detail.reason;
-      this.setCover(detail, data.detail.status);
+      if(data.detail){
+        const detail = data.detail.value || data.detail.reason;
+        this.setCover(detail, data.detail.status);
+      }
       // 歌词
-      const lyric = data.lyric.value || data.lyric.reason;
-      this.setLyric(lyric, data.lyric.status);
+      if(data.lyric){
+        const lyric = data.lyric.value || data.lyric.reason;
+        this.setLyric(lyric, data.lyric.status);
+      }
     },
     activeLine(activeLine) {
       if (this.$refs.line) {
@@ -137,8 +161,63 @@ export default {
         // 保持歌词滚动位置
         this.$refs.lyric.scroll({
           top: this.scrollTop,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
+      }
+    },
+    currentTime(time) {
+      // 获取下一播放行坐标
+      if (this.lineTimes?.lrc) {
+        const lineIndex = this.lineTimes.lrc.findIndex((value, index) => {
+          return time < value && index !== 0;
+        });
+        // 找不到说明播到最后一行了
+        this.activeLine = (lineIndex === -1 ? this.lineTimes.lrc.length : lineIndex) - 1;
+        // 调了进度条，并且歌词为逐字歌词
+        if (this.timeChange && this.lyric.yrc) {
+          this.timeChange = false;
+          const line = this.lyric.yrc.get(this.lineTimes.yrc[this.activeLine]);
+          if (typeof line === 'object') {
+            const activeWords = [...line.keys()];
+            // 计算播放到哪个字
+            const wordIndex = activeWords.findLastIndex((value) => {
+              return time >= value.wordTime;
+            });
+            // 获取更新后的 DOM并执行修改动画参数的函数
+            wordIndex !== -1 &&
+              this.$nextTick(() => {
+                // 暂时移除动画
+                this.$refs.activeWord.forEach((el) => {
+                  el.classList.remove('active');
+                });
+                // 触发重绘让移除生效
+                void this.$refs.activeWord[0].offsetWidth;
+                setStyle();
+              });
+            // 根据播放进度修改动画进度
+            const setStyle = () => {
+              this.$refs.activeWord.forEach((el, index) => {
+                // 播放过的字
+                let animationDuration = '0ms';
+                let animationDelay = '0ms';
+                if (wordIndex === index) {
+                  // 正在播放的字
+                  const activeWord = activeWords[index];
+                  animationDelay = `-${time - activeWord.wordTime}ms`;
+                  animationDuration = `${activeWords[index].duration}ms`;
+                } else if (wordIndex < index) {
+                  // 等待播放的字
+                  animationDelay = `${activeWords[index].delay - (time - this.lineTimes.yrc[this.activeLine])}ms`;
+                  animationDuration = `${activeWords[index].duration}ms`;
+                }
+                el.style.animationDelay = animationDelay;
+                el.style.animationDuration = animationDuration;
+                // 把动画添加回来播放动画
+                el.classList.add('active');
+              });
+            };
+          }
+        }
       }
     },
   },
@@ -248,74 +327,12 @@ export default {
     },
   },
   created() {
-    // 监听是否有在播放音乐
-    this.$bus.$on('playStateChanges', (state) => (this.play = state));
     // 监听是否调了进度条
-    let timeChange = false;
     this.$bus.$on('timeChange', () => {
-      timeChange = true;
-    });
-    // 监听播放进度
-    this.$bus.$on('currentTime', (time) => {
-      this.currentTime = time;
-      // 获取下一播放行坐标
-      if (this.lineTimes?.lrc) {
-        const lineIndex = this.lineTimes.lrc.findIndex((value, index) => {
-          return time < value && index !== 0;
-        });
-        // 找不到说明播到最后一行了
-        this.activeLine = (lineIndex === -1 ? this.lineTimes.lrc.length : lineIndex) - 1;
-        // 调了进度条，并且歌词为逐字歌词
-        if (timeChange && this.lyric.yrc) {
-          timeChange = false;
-          const line = this.lyric.yrc.get(this.lineTimes.yrc[this.activeLine]);
-          if (typeof line === 'object') {
-            const activeWords = [...line.keys()];
-            // 计算播放到哪个字
-            const wordIndex = activeWords.findLastIndex((value) => {
-              return time >= value.wordTime;
-            });
-            // 获取更新后的 DOM并执行修改动画参数的函数
-            wordIndex !== -1 &&
-              this.$nextTick(() => {
-                // 暂时移除动画
-                this.$refs.activeWord.forEach((el) => {
-                  el.classList.remove('active');
-                });
-                // 触发重绘让移除生效
-                void this.$refs.activeWord[0].offsetWidth;
-                setStyle();
-              });
-            // 根据播放进度修改动画进度
-            const setStyle = () => {
-              this.$refs.activeWord.forEach((el, index) => {
-                // 播放过的字
-                let animationDuration = '0ms';
-                let animationDelay = '0ms';
-                if (wordIndex === index) {
-                  // 正在播放的字
-                  const activeWord = activeWords[index];
-                  animationDelay = `-${time - activeWord.wordTime}ms`;
-                  animationDuration = `${activeWords[index].duration}ms`;
-                } else if (wordIndex < index) {
-                  // 等待播放的字
-                  animationDelay = `${activeWords[index].delay - (time - this.lineTimes.yrc[this.activeLine])}ms`;
-                  animationDuration = `${activeWords[index].duration}ms`;
-                }
-                el.style.animationDelay = animationDelay;
-                el.style.animationDuration = animationDuration;
-                // 把动画添加回来播放动画
-                el.classList.add('active');
-              });
-            };
-          }
-        }
-      }
+      this.timeChange = true;
     });
   },
   beforeDestroy() {
-    this.$bus.$off('playStateChanges');
-    this.$bus.$off('currentTime');
     this.$bus.$off('timeChange');
   },
 };
@@ -501,7 +518,7 @@ export default {
 .lyric .container > .line span.word.active.stop {
   animation-play-state: paused;
 }
-.lyric .container > .line .translate-line{
+.lyric .container > .line .translate-line {
   line-height: 1.4;
   font-weight: normal;
   transform: scale(0.9);

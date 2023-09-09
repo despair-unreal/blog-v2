@@ -45,9 +45,7 @@
         <span class="singer text-overflow">{{ item.artists }}</span>
         <span class="time">{{ $utils.millisecondConversionTime(item.duration, ['seconds', 'minutes']) }}</span>
       </li>
-      <li v-show="list.hasMore" class="loading-more">
-        <span>加载更多数据中</span><span class="loadingMusic"></span>
-      </li>
+      <li v-show="list.hasMore" class="loading-more"><span>加载更多数据中</span><span class="loadingMusic"></span></li>
       <li v-if="list.name === 'searchList'" v-show="!list.hasMore" class="loading-more">
         <span>暂无更多数据</span>
       </li>
@@ -73,13 +71,13 @@ export default {
       return this.listData;
     },
   },
-  watch:{
-    'list.status':function(status){
+  watch: {
+    'list.status': function (status) {
       // 搜索时让歌曲列表返回顶部
-      if(this.list.name === 'searchList' && status === 'loading'){
+      if (this.list.name === 'searchList' && status === 'loading') {
         this.$refs.listContainer.scrollTop = 0;
       }
-    }
+    },
   },
   methods: {
     ...mapMutations(['addMusicToList', 'setCurrentMusic', 'setPlayMusicList', 'setCurrentMusicState']),
@@ -203,7 +201,7 @@ export default {
   transform-origin: 50% 50%;
   border-radius: 100%;
 }
-.music-list li.loading-more{
+.music-list li.loading-more {
   justify-content: center;
 }
 .music-list li.loading-more .loadingMusic {

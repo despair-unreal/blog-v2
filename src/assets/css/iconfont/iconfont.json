@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "13137519",
+      "name": "歌词未点击",
+      "font_class": "lyric-mode",
+      "unicode": "e727",
+      "unicode_decimal": 59175
+    },
+    {
+      "icon_id": "7556170",
+      "name": "全屏",
+      "font_class": "quanping",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
       "icon_id": "703504",
       "name": "repeat-once",
       "font_class": "repeat-once",
@@ -186,6 +200,13 @@
       "font_class": "yueduliang",
       "unicode": "e671",
       "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "36524759",
+      "name": "向左1-copy",
+      "font_class": "xiangshang",
+      "unicode": "ec80",
+      "unicode_decimal": 60544
     },
     {
       "icon_id": "577406",
