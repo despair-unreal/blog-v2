@@ -2,7 +2,9 @@
 <template>
   <div id="app">
     <navigation></navigation>
-    <router-view />
+    <keep-alive include="music">
+      <router-view />
+    </keep-alive>
     <rightSide></rightSide>
     <music-audio ref="music"></music-audio>
   </div>

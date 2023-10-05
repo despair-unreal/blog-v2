@@ -1,5 +1,5 @@
 <template>
-  <audio ref="audio" @error="musicError" @play="setPlayState(true)" @pause="setPlayState(false)" :loop="mode === 'repeat'"
+  <audio ref="audio" crossOrigin='anonymous' @error="musicError" @play="setPlayState(true)" @pause="setPlayState(false)" :loop="mode === 'repeat'"
        :src="musicUrl.url" :type="musicUrl.type" @timeupdate="getCurrentTime" @canplay="play" @ended="musicEnded">
     <source :src="`https://music.163.com/song/media/outer/url?id=${musicUrl.id}.mp3`" type="mp3"></source>
   </audio>

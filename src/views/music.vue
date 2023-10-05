@@ -39,6 +39,7 @@ import { mapMutations, mapGetters } from 'vuex';
 import Background from '../components/music/background.vue';
 
 export default {
+  name:'music',
   components: {
     musicBar,
     right,
@@ -77,7 +78,7 @@ export default {
       this.setPlayMusicList({ musicList: [] });
       this.setCurrentMusic({ type: 'setValue', id: null });
     }
-  },
+  }
 };
 </script>
 
