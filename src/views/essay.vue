@@ -1,5 +1,5 @@
 <template>
-  <div class="card-box">
+  <div class="card-box padding">
     <main>
       <h1>咸鱼躺.jpg</h1>
       <div class="content">
@@ -36,19 +36,30 @@
                   <stop offset="100%" stop-color="#4e00c2" />
                 </linearGradient>
                 <mask id="maskRect">
-                    <rect id="rect" width="100%" height="100%" fill="#fff"></rect>
-                    <rect id="rect" rx="8" ry="8" x="2" y="2" width="calc(100% - 4px)" fill="#000" height="calc(100% - 4px)"></rect>
+                  <rect id="rect" width="100%" height="100%" fill="#fff"></rect>
+                  <rect
+                    id="rect"
+                    rx="8"
+                    ry="8"
+                    x="2"
+                    y="2"
+                    width="calc(100% - 4px)"
+                    fill="#000"
+                    height="calc(100% - 4px)"
+                  ></rect>
                 </mask>
               </defs>
               <g mask="url(#maskRect)">
                 <rect id="rect" x="-25%" y="25%" width="150%" height="50%" fill="url(#color)">
-                  <animateTransform attributeName="transform"
-                          attributeType="XML"
-                          type="rotate"
-                          from="0"
-                          to="360"
-                          dur="4s"
-                          repeatCount="indefinite"/>
+                  <animateTransform
+                    attributeName="transform"
+                    attributeType="XML"
+                    type="rotate"
+                    from="0"
+                    to="360"
+                    dur="4s"
+                    repeatCount="indefinite"
+                  />
                 </rect>
               </g>
             </svg>
@@ -61,9 +72,9 @@
 </template>
 
 <script>
-import pagination from "../components/global/pagination.vue";
+import pagination from '../components/global/pagination.vue';
 export default {
-  components: { pagination },
+  components: { pagination }
 };
 </script>
 
@@ -99,7 +110,7 @@ main > .content > .item {
   margin-top: 20px;
 }
 main > .content > .item::before {
-  content: "•";
+  content: '•';
   position: absolute;
   font-size: 60px;
   left: -20px;
@@ -156,7 +167,7 @@ main > .content > .item > .content {
   padding: 20px;
   border-radius: 10px;
   border: 2px solid rgba(212, 212, 212, 0.3);
-  background: rgba(212, 212, 212, .1);
+  background: rgba(212, 212, 212, 0.1);
   transition: all 0.3s;
   overflow: hidden;
 }

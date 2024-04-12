@@ -1,15 +1,16 @@
+<!-- 博客首页 -->
 <template>
   <div class="container">
     <main>
       <div v-for="index in 2" :key="index" class="article-item card-box">
-        <router-link class="cover" to="/articleContent">
+        <router-link class="cover" to="/articleDetail">
           <img src="@/assets/images/crowd-loading/crowd-background.jpg" />
         </router-link>
         <div class="info">
-          <router-link class="title text-overflow" to="/articleContent"
-            >逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入</router-link
-          >
-          <articleMeta class="meta"></articleMeta>
+          <router-link class="title text-overflow" to="/articleDetail">
+            逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入
+          </router-link>
+          <Meta class="meta"></Meta>
           <div class="content text-overflow sticky-content">
             <p>
               游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录
@@ -23,18 +24,18 @@
 </template>
 
 <script>
-import articleMeta from "../components/articleContent/articleMeta.vue";
+import Meta from '../components/ArticleMeta.vue';
 import pagination from '../components/global/pagination.vue';
 export default {
   components: {
-    articleMeta,
-    pagination,
-  },
+    Meta,
+    pagination
+  }
 };
 </script>
 
 <style scoped>
-.container{
+.container {
   padding: 0 !important;
 }
 @media screen and (max-width: 768px) {
@@ -67,7 +68,7 @@ export default {
   transform: scale(1.1);
 }
 .article-item .cover {
-  position: relative;
+  /* position: relative; */
   width: 55%;
   align-self: stretch;
   overflow: hidden;
@@ -75,7 +76,7 @@ export default {
   background: black;
 }
 .article-item .cover img {
-  position: absolute;
+  /* position: absolute; */
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -94,9 +95,11 @@ export default {
   margin-bottom: 6px;
   -webkit-line-clamp: 2;
 }
-.article-item .info .meta {
+.article-item .info ::v-deep .meta {
   color: #858585;
   font-size: 12.6px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 .article-item .info .content {
   margin-top: 6px;

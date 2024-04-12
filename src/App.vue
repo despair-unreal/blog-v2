@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import navigation from './components/global/navigation.vue'
-import rightSide from './components/global/rightSide.vue'
-import MusicAudio from './components/music/musicAudio.vue'
+import navigation from './components/global/navigation.vue';
+import rightSide from './components/global/rightSide.vue';
+import MusicAudio from './components/music/musicAudio.vue';
 
 export default {
   components: {
@@ -21,9 +21,8 @@ export default {
     rightSide,
     MusicAudio
   }
-}
+};
 </script>
 
 <style>
-
 </style>

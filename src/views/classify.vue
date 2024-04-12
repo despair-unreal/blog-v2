@@ -1,5 +1,5 @@
 <template>
-  <main class="card-box">
+  <main class="card-box padding">
     <div ref="echarts" class="echarts"></div>
     <div class="category">
       <h2>分类 - 6</h2>
@@ -21,7 +21,7 @@
       <router-link
         :style="{
           color: $utils.randomColor('html', '#999'),
-          fontSize: randomFontSize(),
+          fontSize: randomFontSize()
         }"
         v-for="item in 20"
         :key="item"
@@ -33,30 +33,30 @@
 </template>
 
 <script>
-import * as echarts from "echarts";
+import * as echarts from 'echarts';
 
 export default {
   data() {
     return {
       chart: null,
-      observer: null,
+      observer: null
     };
   },
   methods: {
     //生成随机字体大小
     randomFontSize: function () {
-      const size = (Math.random() * 10 + 14.28).toFixed(2) + "px";
+      const size = (Math.random() * 10 + 14.28).toFixed(2) + 'px';
       return size;
     },
     //生成echarts图表
     setEcharts: function () {
       const option = {
         title: {
-          text: "文章一级分类图",
+          text: '文章一级分类图'
         },
         tooltip: {
-          trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)",
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
         toolbox: {
           show: true,
@@ -64,47 +64,47 @@ export default {
             mark: { show: true },
             dataView: { show: true, readOnly: false },
             restore: { show: true },
-            saveAsImage: { show: true },
-          },
+            saveAsImage: { show: true }
+          }
         },
         dataset: [
           {
             source: [
-              { value: 3, name: "rose 1" },
-              { value: 28, name: "rose 2" },
-              { value: 26, name: "rose 3" },
-              { value: 24, name: "rose 4" },
-              { value: 22, name: "rose 5" },
-              { value: 20, name: "rose 6" },
-              { value: 18, name: "rose 7" },
-              { value: 16, name: "rose 8" },
-            ],
+              { value: 3, name: 'rose 1' },
+              { value: 28, name: 'rose 2' },
+              { value: 26, name: 'rose 3' },
+              { value: 24, name: 'rose 4' },
+              { value: 22, name: 'rose 5' },
+              { value: 20, name: 'rose 6' },
+              { value: 18, name: 'rose 7' },
+              { value: 16, name: 'rose 8' }
+            ]
           },
           {
             transform: [
               {
-                type: "sort",
-                config: { dimension: "value", order: "asc" },
-              },
-            ],
-          },
+                type: 'sort',
+                config: { dimension: 'value', order: 'asc' }
+              }
+            ]
+          }
         ],
         series: [
           {
-            name: "Nightingale Chart",
-            type: "pie",
+            name: 'Nightingale Chart',
+            type: 'pie',
             radius: [30, 150],
-            roseType: "area",
+            roseType: 'area',
             itemStyle: {
-              borderRadius: 8,
+              borderRadius: 8
             },
-            datasetIndex: 1,
-          },
-        ],
+            datasetIndex: 1
+          }
+        ]
       };
       this.chart = echarts.init(this.$refs.echarts, null, {
-        renderer: "canvas",
-        useDirtyRect: false,
+        renderer: 'canvas',
+        useDirtyRect: false
       });
       this.chart.setOption(option);
       //监听dom大小变化
@@ -112,7 +112,7 @@ export default {
         this.chart.resize();
       });
       this.observer.observe(this.$refs.echarts);
-    },
+    }
   },
   mounted() {
     //生成echarts图表
@@ -123,14 +123,11 @@ export default {
     this.observer.disconnect();
     //销毁图表实例
     this.chart.dispose();
-  },
+  }
 };
 </script>
 
 <style scoped>
-main {
-  padding: 50px 40px;
-}
 main > div {
   border: 2px solid #a4b0be;
   border-radius: 5px;
@@ -167,7 +164,7 @@ main > div > h2 {
   margin: 6px 0;
 }
 .category ul li::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 9.8px;
   left: 0;

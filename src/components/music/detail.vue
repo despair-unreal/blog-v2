@@ -13,11 +13,11 @@
                 <h2 ref="artists" class="text-overflow">{{ msg.artists }}</h2>
               </div>
               <div ref="lyric" class="lyric">
-                <slot name="lyric"></slot>
+                <!-- <slot name="lyric"></slot> -->
               </div>
             </div>
           </div>
-          <lyric class="only-lyric"></lyric>
+          <!-- <lyric class="only-lyric"></lyric> -->
         </div>
       </div>
       <div class="middle"></div>
@@ -99,14 +99,14 @@
 </template>
 
 <script>
-import lyric from './lyric.vue';
+// import lyric from './lyric.vue';
 import Background from './background.vue';
 import { musicControls } from '@/mixmin/musicControl.js';
 
 export default {
   mixins: [musicControls],
   components: {
-    Background,lyric
+    Background/* ,lyric */
   },
   props: {
     cover: String,
@@ -274,7 +274,7 @@ export default {
     adjustTextSize(target, limitLineNum, minSize, step) {
       const ctx = document.createElement('canvas').getContext('2d');
       // 等歌词出现再监听
-      console.log(this.$refs.lyric);
+      // console.log(this.$refs.lyric);
       const computedStyle = window.getComputedStyle(target);
       let { fontFamily, fontSize } = computedStyle;
       fontSize = Number(fontSize.slice(0, -2));
@@ -300,7 +300,6 @@ export default {
       target.style.fontSize = `${firstFontSize / vw}vw`;
       // 判断是否仍然溢出
       isOverFlow = isOverFlowFunc();
-      console.log(2, isOverFlow);
       if (!isOverFlow) return;
       // 通过循环再次缩小字号
       let finalFontSize = firstFontSize;

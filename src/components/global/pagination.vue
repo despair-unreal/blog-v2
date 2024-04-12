@@ -20,11 +20,7 @@
     >
       {{ maxPage }}
     </router-link>
-    <router-link
-      v-if="currentIndex !== maxPage"
-      @click.native="nextCurrent"
-      to=""
-    >
+    <router-link v-if="currentIndex !== maxPage" @click.native="nextCurrent" to="">
       <i class="iconfont icon-xiangyou1"></i>
     </router-link>
   </div>
@@ -35,7 +31,7 @@ export default {
   data() {
     return {
       currentIndex: 1,
-      maxPage: 8,
+      maxPage: 8
     };
   },
   computed: {
@@ -47,7 +43,7 @@ export default {
       // 这边所设置的展示的页码是除了最后一个页码，因为最后一个页码已固定显示
       // 即动态显示的页码为：1 ~ maxPage.length-1
       else return this.maxPage - 1;
-    },
+    }
   },
   methods: {
     preCurrent: function () {
@@ -58,8 +54,8 @@ export default {
     },
     changeCurrent: function (item) {
       this.currentIndex = item;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -1,11 +1,11 @@
 <template>
-  <div id="container">
-    <div id="nav" :class="[navigationFontColor, isVisible]">
+  <nav>
+    <div id="nav" :style="fontColorStyle" :class="[isVisible]">
       <router-link id="blog-name" :to="home.src">
-        <i :class="['iconfont',home.icon]"></i>
+        <i :class="['iconfont', home.icon]"></i>
         <div class="name">
           <span>BAIKONG</span>
-          <span>{{pageName}}</span>
+          <span>{{ pageName }}</span>
         </div>
       </router-link>
       <div id="menus">
@@ -18,64 +18,65 @@
     </div>
     <rightNav :openrightnav="openrightnav" @closeRightNav="closeRightNav" :rightMenus="rightMenus"></rightNav>
     <search :opensearch="opensearch" @closeSearch="closeSearch"></search>
-  </div>
+  </nav>
 </template>
 
 <script>
-import search from "./search.vue";
-import rightNav from "./rightNav.vue";
+import search from './search.vue';
+import rightNav from './rightNav.vue';
 
 export default {
   components: {
     search,
-    rightNav,
+    rightNav
   },
   data() {
     return {
       opensearch: false,
-      openrightnav:false,
-      navFontColor: null,
+      openrightnav: false,
+      fontColor: null,
       //记录上一次页面滚动的距离
-      prePageYOffset : 0,
+      prePageYOffset: 0,
       isVisible: null,
-      home:{ name: "HOME",pageName:"home", src: "/home", icon:"icon-home"},
+      home: { name: 'HOME', pageName: 'home', src: '/home', icon: 'icon-home' },
       menus: [
-        { name: "文章",pageName:"article", src: "/", icon:"icon-fabuwenzhang"},
-        { name: "归类",pageName:"classify",  src: "/classify", icon: "icon-guanli"},
-        { name: "随笔",pageName:"essay",  src: "/essay", icon: "icon-jurassic_text"},
-        { name: "留言",pageName:"board",  src: "", icon: "icon-heiban"},
-        { name: "音乐",pageName:"music",  src: "/music", icon: "icon-yinle1"},
-      ],
+        { name: '文章', pageName: 'article', src: '/', icon: 'icon-fabuwenzhang' },
+        { name: '归类', pageName: 'classify', src: '/classify', icon: 'icon-guanli' },
+        { name: '随笔', pageName: 'essay', src: '/essay', icon: 'icon-jurassic_text' },
+        { name: '留言', pageName: 'board', src: '/random', icon: 'icon-heiban' },
+        { name: '音乐', pageName: 'music', src: '/music', icon: 'icon-yinle1' }
+      ]
     };
   },
   computed: {
+    fontColorStyle() {
+      return { color: this.fontColor };
+    },
     rightMenus: function () {
-      return [this.home,...this.menus];
+      return [this.home, ...this.menus];
     },
-    pageName: function(){
-      const findPageName = this.rightMenus.find(el=> el.src === this.$route.path)
-      if(findPageName)
-        return findPageName.pageName.toUpperCase();
-      else if(this.$route.path === "/articleContent")
-        return "article".toUpperCase();
+    pageName: function () {
+      const findPageName = this.rightMenus.find(el => el.src === this.$route.path);
+      if (findPageName) return findPageName.pageName.toUpperCase();
+      else if (this.$route.path === '/articleContent') return 'article'.toUpperCase();
       else {
-        console.log(this.$route.path,findPageName)
-        return "home".toUpperCase();
+        console.log(this.$route.path, findPageName);
+        return 'home'.toUpperCase();
       }
-    },
-    navigationFontColor: function () {
+    }
+    /*     navigationFontColor: function () {
       switch (this.$route.path) {
-        case "/music":
-        case "/home":
-          return "FontcolorLightGrey";
-        case "/articleContent": {
+        case '/music':
+        case '/home':
+          return 'FontcolorLightGrey';
+        case '/articleContent': {
           if (this.navFontColor) return this.navFontColor;
-          else return "";
+          else return '';
         }
         default:
-          return "";
+          return '';
       }
-    },
+    } */
   },
   methods: {
     //搜索框
@@ -86,39 +87,40 @@ export default {
       this.opensearch = false;
     },
     //侧边导航栏
-    openRightNav: function(){
+    openRightNav: function () {
       this.openrightnav = true;
     },
-    closeRightNav: function(){
+    closeRightNav: function () {
       this.openrightnav = false;
     },
     //导航栏滚动样式
-    setNavScrollClass: function(){
+    setNavScrollClass: function () {
       //根据比较当前与上次的页面滚动距离来判断页面是往哪个方向滚动
       //向下滚动
-      if (window.pageYOffset > this.prePageYOffset) this.isVisible = "not-visible";
-      else this.isVisible = "fixed";
+      if (window.pageYOffset > this.prePageYOffset) this.isVisible = 'not-visible';
+      else this.isVisible = 'fixed';
 
-      if (window.pageYOffset === 0) this.isVisible = "";
+      if (window.pageYOffset === 0) this.isVisible = '';
 
       this.prePageYOffset = window.pageYOffset;
     }
   },
   created() {
-    this.$bus.$on("navFontColorClass", (res) => {
-      this.navFontColor = res;
+    this.$bus.$on('change-font-color', res => {
+      this.fontColor = res;
     });
-    
-    window.addEventListener("scroll", this.setNavScrollClass);
+
+    window.addEventListener('scroll', this.setNavScrollClass);
   },
-  beforeDestroy(){
-    window.removeEventListener("scroll", this.setNavScrollClass);
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.setNavScrollClass);
+    this.$bus.$off('change-font-color');
   }
 };
 </script>
 
 <style scoped>
-#container{
+nav {
   position: fixed;
   z-index: 99;
 }
@@ -131,13 +133,13 @@ export default {
   left: 0;
   padding: 0 36px;
   font-size: 16px;
-  color: #4c4948;
+  /* color: #4c4948; */
   user-select: none;
   transition: all 0.5s;
 }
-#nav.FontcolorLightGrey {
+/* #nav.FontcolorLightGrey {
   color: #eee !important;
-}
+} */
 #nav.fixed {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(3px);
@@ -197,7 +199,7 @@ export default {
   padding-bottom: 3px;
 }
 #menus .menus-item a:after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;

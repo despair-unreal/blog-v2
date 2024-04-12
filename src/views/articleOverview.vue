@@ -1,5 +1,5 @@
 <template>
-  <div class="card-box">
+  <div class="card-box padding">
     <main>
       <h1>文章总览 - 64</h1>
       <div class="article-sort">
@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import pagination from "../components/global/pagination.vue";
+import pagination from '../components/global/pagination.vue';
 
 export default {
   components: {
-    pagination,
-  },
+    pagination
+  }
 };
 </script>
 
@@ -46,7 +46,7 @@ main h1 {
   margin-left: 10px;
 }
 main h1::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   transform: translateY(-100%);
@@ -59,7 +59,7 @@ main h1::before {
 }
 main h1::after,
 main .article-sort::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   width: 2px;
@@ -90,7 +90,7 @@ main .article-sort .item {
   margin: 0 0 10px 20px;
 }
 main .article-sort .item::before {
-  content: "";
+  content: '';
   position: absolute;
   left: -40px;
   width: 6px;

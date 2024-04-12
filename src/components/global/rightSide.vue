@@ -7,7 +7,7 @@
       <button type="botton" title="音乐">
         <i class="iconfont icon-music_playlist"></i>
       </button>
-      <button v-if="onArticleContent" type="botton" title="目录" @click="openCatalogue">
+      <button v-if="onArticleDetail" type="botton" title="目录" @click="updateSideCatalogShowState">
         <i class="iconfont icon-liebiao"></i>
       </button>
       <button type="botton" title="返回顶部" @click="goTop()">
@@ -18,45 +18,42 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
       isShow: false,
-      isOpenCatalogue:false
+      isOpenCatalog: false
     };
   },
-  computed:{
-    onArticleContent:function(){
-        if(this.$route.path === '/articleContent')
-          return true;
-        else
-          return false;
+  computed: {
+    onArticleDetail: function () {
+      if (this.$route.path === '/articleDetail') return true;
+      else return false;
     }
   },
   mounted() {
-    window.addEventListener("scroll", () => {
-        //处于页面顶部
-        if(window.scrollY === 0){
-          this.isShow = false;
-        }else{
-            this.isShow = true;
-        }
+    window.addEventListener('scroll', () => {
+      //处于页面顶部
+      if (window.scrollY === 0) {
+        this.isShow = false;
+      } else {
+        this.isShow = true;
+      }
     });
   },
-  watch:{
-    isOpenCatalogue:function(){
-      this.$bus.$emit('isOpenCatalogue',this.isOpenCatalogue);
+  watch: {
+    isOpenCatalog: function () {
+      this.$bus.$emit('isOpenCatalog', this.isOpenCatalog);
     }
   },
-  methods:{
-    goTop:function(){
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-        this.isOpenCatalogue = false;
+  methods: {
+    goTop: function () {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      this.isOpenCatalog = false;
     },
-    openCatalogue:function(){
-      this.isOpenCatalogue = !this.isOpenCatalogue;
-    }
+    ...mapMutations(['updateSideCatalogShowState'])
   }
 };
 </script>
@@ -87,7 +84,7 @@ export default {
   line-height: 1;
   transition: all 0.5s;
 }
-#right-side > div button:hover{
+#right-side > div button:hover {
   background: #1f2d3d;
   color: #fff;
 }
@@ -95,7 +92,7 @@ export default {
   font-weight: bold;
 }
 @media screen and (min-width: 900px) {
-  #right-side > div button[title="目录"]{
+  #right-side > div button[title='目录'] {
     display: none;
   }
 }

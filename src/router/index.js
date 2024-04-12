@@ -1,23 +1,23 @@
 //前端路由
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import home from '../views/Home.vue'
-import blog from '../components/global/blog.vue'
-import article from '../views/article.vue'
-import articleContent from '../views/articleContent.vue'
-import classify from '../views/classify.vue'
-import essay from '../views/essay.vue'
-import music from '../views/music.vue'
-import articleOverview from '../views/articleOverview.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import home from '../views/Home.vue';
+import Blog from '../components/global/Blog.vue';
+import article from '../views/index.vue';
+import articleDetail from '../views/articleDetail.vue';
+import classify from '../views/classify.vue';
+import essay from '../views/essay.vue';
+import music from '../views/music.vue';
+import articleOverview from '../views/articleOverview.vue';
+import random from '../views/random.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'blog',
-    component:blog,
-    children:[
+    component: Blog,
+    children: [
       {
         path: '',
         name: 'article',
@@ -37,13 +37,18 @@ const routes = [
         path: '/articleOverview',
         name: 'articleOverview',
         component: articleOverview
+      },
+      {
+        path: '/random',
+        name: 'random',
+        component: random
       }
     ]
   },
   {
-    path: '/articleContent',
-    name: 'articleContent',
-    component:articleContent,
+    path: '/articleDetail',
+    name: 'articleDetail',
+    component: articleDetail
   },
   {
     path: '/music',
@@ -53,14 +58,14 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: home,
+    component: home
   }
-]
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
+});
 
-export default router
+export default router;
