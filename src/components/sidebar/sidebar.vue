@@ -1,18 +1,21 @@
+<!-- 侧边栏 -->
 <template>
   <div class="sidebar">
-    <info></info>
-    <RecentArticle></RecentArticle>
-    <category></category>
-    <tags></tags>
+    <Info />
+    <RecentArticle />
+    <Category />
+    <Tags />
   </div>
 </template>
 
 <script>
-import tags from './tags.vue';
-import category from './category.vue';
+import Info from './Info.vue';
 import RecentArticle from './RecentArticle.vue';
-import info from './info.vue';
+import Category from './Category.vue';
+import Tags from './Tags.vue';
 export default {
-  components: { RecentArticle, category, tags, info }
+  components: { Info, RecentArticle, Category, Tags }
 };
 </script>
+<style lang="scss" scoped>
+</style>

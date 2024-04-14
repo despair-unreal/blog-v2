@@ -1,28 +1,21 @@
+<!-- 分页码 -->
 <template>
   <div class="pagination">
-    <router-link v-if="currentIndex !== 1" @click.native="preCurrent" to="">
-      <i class="iconfont icon-xiangzuo1"></i>
-    </router-link>
-    <router-link
+    <div class="item" v-show="currentIndex !== 1" @click="currentIndex !== 1 && currentIndex--">
+      <Icon icon="leftArrow" />
+    </div>
+    <div
       v-for="item in showPage"
       :key="item"
-      @click.native="changeCurrent(item)"
-      :class="[{ current: currentIndex === item }, 'page-number']"
+      @click="changeCurrent(content(item))"
+      :class="['item page-number', { current: currentIndex === item }]"
       to=""
     >
-      {{ item }}
-    </router-link>
-    <span class="space" v-if="currentIndex < maxPage - 3">...</span>
-    <router-link
-      :class="[{ current: currentIndex === maxPage }, 'page-number']"
-      @click.native="changeCurrent(maxPage)"
-      to=""
-    >
-      {{ maxPage }}
-    </router-link>
-    <router-link v-if="currentIndex !== maxPage" @click.native="nextCurrent" to="">
-      <i class="iconfont icon-xiangyou1"></i>
-    </router-link>
+      {{ content(item) }}
+    </div>
+    <div class="item" v-show="currentIndex !== maxPage" @click="currentIndex !== maxPage && currentIndex++">
+      <Icon icon="rightArrow" />
+    </div>
   </div>
 </template>
 
@@ -30,65 +23,79 @@
 export default {
   data() {
     return {
+      isUnfold: false,
       currentIndex: 1,
       maxPage: 8
     };
   },
   computed: {
+    // 是否显示省略号
+    isShowAbbr() {
+      // 即需要显示省略号的情况为：当前页码后面还有4个以上的页码
+      return this.currentIndex <= this.maxPage - 4 && !this.isUnfold;
+    },
     // 展示的页码
-    showPage: function () {
-      // 在显示到倒数第4个页码前，当前页码后需要再显示一个页码
-      // 省略号中省略两个及以上的页码
-      if (this.currentIndex < this.maxPage - 3) return this.currentIndex + 1;
-      // 这边所设置的展示的页码是除了最后一个页码，因为最后一个页码已固定显示
-      // 即动态显示的页码为：1 ~ maxPage.length-1
-      else return this.maxPage - 1;
+    showPage() {
+      // 当前页码（除了最后一个页码）后面需要至少显示一个页码，省略号中省略两个及以上的页码（占一位），最后一个页码固定显示
+      if (this.isShowAbbr) return this.currentIndex + 3;
+      return this.maxPage;
     }
   },
   methods: {
-    preCurrent: function () {
-      this.currentIndex--;
-    },
-    nextCurrent: function () {
-      this.currentIndex++;
+    // 页码内容
+    content(item) {
+      let res = item;
+      // 需要显示省略号
+      if (this.isShowAbbr) {
+        if (item === this.showPage) {
+          res = this.maxPage;
+        } else if (item === this.showPage - 1) {
+          res = '...';
+        }
+      }
+      return res;
     },
     changeCurrent: function (item) {
-      this.currentIndex = item;
+      if (item !== '...') {
+        this.currentIndex = item;
+        this.isUnfold = false;
+      } else {
+        // 展开所有页码
+        this.isUnfold = true;
+      }
     }
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$transition-time: 0.4s;
 .pagination {
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
-  text-align: center;
-  width: 100%;
   font-size: 16px;
-}
-.pagination > * {
-  display: inline-block;
-  text-align: center;
-  margin: 0 4px;
-  min-width: 24px;
-  height: 24px;
-  line-height: 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.4s;
-}
-.pagination .current {
-  background: #1f2d3d;
-  color: #fff;
-  transition: all 0.4s;
-}
-.pagination .current,
-.pagination .space {
-  cursor: default;
-}
-.pagination > *:not(.space):hover {
-  background: #fff;
-  color: #1f2d3d;
-  box-shadow: 0 3px 8px 3px rgba(150, 150, 150, 0.1);
+  user-select: none;
+  .item {
+    height: 24px;
+    min-width: 24px;
+    margin: 0 4px;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 24px;
+    transition: all $transition-time;
+    cursor: pointer;
+    &:hover {
+      background: #fff;
+      color: $emphasize-black;
+      box-shadow: 0 3px 8px 3px $block-shadow;
+    }
+  }
+  .current {
+    background: $emphasize-black;
+    color: #fff;
+    transition: all $transition-time;
+    cursor: default;
+  }
 }
 </style>

@@ -6,17 +6,17 @@
         <div v-for="item in 8" :key="item">
           <div class="item year">2023</div>
           <div class="item" v-for="item in 3" :key="item">
-            <router-link class="cover" to=""
-              ><img src="@/assets/images/crowd-loading/crowd-background.jpg"
-            /></router-link>
+            <router-link class="cover" to="">
+              <img src="@/assets/images/crowd-loading/crowd-background.jpg" />
+            </router-link>
             <div class="info">
               <div class="time">
                 <i class="iconfont icon-rili"></i>
                 <time title="发表于 2023-03-12">2023-03-12</time>
               </div>
-              <router-link to="" class="title text-overflow"
-                >学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记</router-link
-              >
+              <router-link to="" class="title text-overflow">
+                学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记学习笔记
+              </router-link>
             </div>
           </div>
         </div>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import pagination from '../components/global/pagination.vue';
+import pagination from '../components/global/Pagination.vue';
 
 export default {
   components: {

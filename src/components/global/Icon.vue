@@ -8,6 +8,7 @@ const map = {
   dividers: 'icon-fenge',
   grouping: 'icon-grouping',
   rightArrow: 'icon-xiangyou1',
+  leftArrow: 'icon-xiangzuo1',
   calendar: 'icon-rili',
   browse: 'icon-yueduliang',
   renewal: 'icon-banbengengxin',
@@ -15,7 +16,9 @@ const map = {
   wechat: 'icon-wechat',
   weibo: 'icon-weibo',
   link: 'icon-lianjie',
-  list: 'icon-liebiao'
+  list: 'icon-liebiao',
+  github: 'icon-github-fill',
+  tags: 'icon-24gf-tags'
 };
 export default {
   functional: true,

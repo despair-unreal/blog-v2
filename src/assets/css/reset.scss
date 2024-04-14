@@ -1,38 +1,32 @@
-.iconfont{
-  font-size: inherit;
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-html{
+html {
   scroll-behavior: smooth;
 }
 
 body {
   font-size: 14px;
-  color: #4c4948;
+  color: $font-1;
   line-height: 2;
   font-family: Montserrat, Noto Sans SC;
-  background: radial-gradient(61.04% 89.69% at 100% 100%,
+  background: radial-gradient(
+      61.04% 89.69% at 100% 100%,
       rgba(200, 250, 255, 0.08) 0%,
       rgba(28, 210, 229, 0.08) 40.63%,
-      rgba(28, 210, 229, 0) 100%),
-    radial-gradient(43.78% 64.34% at 60.31% 100%,
-      rgba(23, 74, 228, 0.08) 0%,
-      rgba(23, 74, 228, 0) 100%),
-    linear-gradient(180deg,
-      rgba(23, 74, 228, 0) 29.44%,
-      rgba(23, 74, 228, 0.06) 100%),
+      rgba(28, 210, 229, 0) 100%
+    ),
+    radial-gradient(43.78% 64.34% at 60.31% 100%, rgba(23, 74, 228, 0.08) 0%, rgba(23, 74, 228, 0) 100%),
+    linear-gradient(180deg, rgba(23, 74, 228, 0) 29.44%, rgba(23, 74, 228, 0.06) 100%),
     linear-gradient(90deg, #f3f3f7 0%, #ebf0f9 100%);
 }
 
 a {
   color: inherit;
   text-decoration: none;
-  transition: all .2s;
+  transition: all 0.2s;
 }
 a:visited {
   color: inherit;
@@ -58,4 +52,7 @@ canvas {
 input {
   font-family: inherit;
   font-size: 100%;
+}
+li {
+  list-style: none;
 }

@@ -1,113 +1,97 @@
 <!-- 博客首页 -->
 <template>
   <div class="container">
-    <main>
-      <div v-for="index in 2" :key="index" class="article-item card-box">
+    <ul>
+      <li v-for="item in 2" :key="item" class="list-item">
         <router-link class="cover" to="/articleDetail">
           <img src="@/assets/images/crowd-loading/crowd-background.jpg" />
         </router-link>
         <div class="info">
-          <router-link class="title text-overflow" to="/articleDetail">
+          <router-link class="title" to="/articleDetail">
             逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入逆光潜入
           </router-link>
           <Meta class="meta"></Meta>
-          <div class="content text-overflow sticky-content">
+          <div :class="['content', { 'sticky-content': item === 1 }]">
             <p>
               游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录游戏记录
             </p>
           </div>
         </div>
-      </div>
-    </main>
-    <pagination></pagination>
+      </li>
+    </ul>
+    <Pagination></Pagination>
   </div>
 </template>
 
 <script>
-import Meta from '../components/ArticleMeta.vue';
-import pagination from '../components/global/pagination.vue';
+import Meta from '@/components/ArticleMeta.vue';
+import Pagination from '@/components/global/Pagination.vue';
 export default {
   components: {
     Meta,
-    pagination
+    Pagination
   }
 };
 </script>
 
-<style scoped>
-.container {
-  padding: 0 !important;
-}
-@media screen and (max-width: 768px) {
-  .article-item {
-    flex-direction: column;
-    height: auto !important;
-  }
-  .article-item .cover {
-    width: 100% !important;
-    height: 230px !important;
-    border-radius: 8px 8px 0 0 !important;
-  }
-  .article-item .info {
-    width: 100% !important;
-    padding: 20px 20px 30px !important;
-  }
-  .article-item:first-child .info .content {
-    -webkit-line-clamp: 8;
-  }
-  .article-item:not(:first-child) .info .content {
-    -webkit-line-clamp: 3;
-  }
-}
-.article-item {
+<style lang="scss" scoped>
+$max-width: 768px;
+.list-item {
+  @include card-box;
   display: flex;
   align-items: center;
   width: 100%;
-}
-.article-item:hover .cover img {
-  transform: scale(1.1);
-}
-.article-item .cover {
-  /* position: relative; */
-  width: 55%;
-  align-self: stretch;
-  overflow: hidden;
-  border-radius: 12px 0 0 12px;
-  background: black;
-}
-.article-item .cover img {
-  /* position: absolute; */
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  transition: all 0.6s;
-}
-.article-item .info {
-  width: 45%;
-  padding: 20px 30px;
-  overflow: hidden;
-}
-.article-item .info .title {
-  font-size: 22px;
-  font-weight: bolder;
-  line-height: 1.4;
-  color: #1f2d3d;
-  margin-bottom: 6px;
-  -webkit-line-clamp: 2;
-}
-.article-item .info ::v-deep .meta {
-  color: #858585;
-  font-size: 12.6px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-.article-item .info .content {
-  margin-top: 6px;
-}
-.article-item .info .content {
-  -webkit-line-clamp: 3;
-}
-.article-item .info .sticky-content {
-  -webkit-line-clamp: 8;
+  &:hover .cover img {
+    transform: scale(1.1);
+  }
+  .cover {
+    width: 55%;
+    align-self: stretch;
+    overflow: hidden;
+    border-radius: 12px 0 0 12px;
+    background: black;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: all 0.6s;
+    }
+  }
+  .info {
+    width: 45%;
+    padding: 20px 30px;
+    overflow: hidden;
+    .title {
+      font-size: 22px;
+      font-weight: bolder;
+      line-height: 1.4;
+      color: $emphasize-black;
+      margin-bottom: 6px;
+      @include text-overflow(2);
+    }
+    .meta {
+      font-size: 12.6px;
+      justify-content: flex-start;
+    }
+    .content {
+      margin-top: 6px;
+      @include text-overflow(3);
+    }
+    .sticky-content {
+      @include text-overflow(8);
+    }
+  }
+  @media screen and (max-width: $max-width) {
+    flex-direction: column;
+    .cover {
+      width: 100%;
+      height: 230px;
+      border-radius: 8px 8px 0 0;
+    }
+    .info {
+      width: 100%;
+      padding: 20px 20px 30px;
+    }
+  }
 }
 </style>

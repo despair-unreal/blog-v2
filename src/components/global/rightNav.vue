@@ -2,7 +2,7 @@
   <div>
     <div id="mask" :class="{ close: !openrightnav }" @click="closeRightNav"></div>
     <div id="container" :class="[{ close: !openrightnav }, 'sidebar']">
-      <info></info>
+      <Info></Info>
       <div class="menus card-box">
         <router-link :to="item.src" v-for="item in rightMenus" :key="item.name">
           <i :class="[item.icon, 'iconfont']"></i>
@@ -14,10 +14,10 @@
 </template>
 
 <script>
-import info from '@/components/sidebar/info.vue';
+import Info from '@/components/sidebar/Info.vue';
 
 export default {
-  components: { info },
+  components: { Info },
   props: ['rightMenus', 'openrightnav'],
   methods: {
     closeRightNav: function () {

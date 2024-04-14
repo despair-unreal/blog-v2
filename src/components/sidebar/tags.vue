@@ -1,33 +1,44 @@
+<!-- 标签 -->
 <template>
-  <div class="tags card-box">
-      <h2>
-        <i class="iconfont icon-24gf-tags"></i>
-        <span>标签</span>
-      </h2>
-      <div class="tag-group">
+  <SideBlock>
+    <template #icon>
+      <Icon icon="tags"></Icon>
+    </template>
+    <template #name>
+      <span>标签</span>
+    </template>
+    <template #content>
+      <div>
         <router-link
-          :style="{ color: $utils.randomColor('html', '#999') }"
+          :style="`--color:${$utils.randomColor('html', '#999')}`"
+          class="tag"
           v-for="item in 6"
           :key="item"
           to=""
-          >吐槽</router-link
         >
+          吐槽
+        </router-link>
       </div>
-    </div>
+    </template>
+  </SideBlock>
 </template>
 
 <script>
-export default {
+import SideBlock from './SideBlock.vue';
 
-}
+export default {
+  components: { SideBlock }
+};
 </script>
 
-<style>
-.tags .tag-group a {
+<style lang="scss" scoped>
+.tag {
+  color: var(--color);
   font-size: 15.4px;
   padding: 0 4px;
-}
-.tags .tag-group a:hover {
-  color: #797979 !important;
+  word-break: keep-all;
+  &:hover {
+    color: $font-2 !important;
+  }
 }
 </style>

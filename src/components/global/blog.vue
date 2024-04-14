@@ -2,10 +2,10 @@
 <template>
   <Layout>
     <template #main>
-      <router-view id="main-content" />
+      <router-view />
     </template>
     <template #aside>
-      <sidebar id="sidebar"></sidebar>
+      <sidebar></sidebar>
     </template>
   </Layout>
 </template>

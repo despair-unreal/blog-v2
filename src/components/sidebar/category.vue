@@ -1,46 +1,44 @@
+<!-- 分类 -->
 <template>
-  <div class="category card-box">
-    <h2>
-      <i class="iconfont icon-grouping"></i>
+  <SideBlock>
+    <template #icon>
+      <Icon icon="grouping"></Icon>
+    </template>
+    <template #name>
       <span>分类</span>
-    </h2>
-    <div class="category-list">
-      <router-link v-for="item in 8" :key="item" to="">
-        <span>hexo</span>
-        <span>2</span>
-      </router-link>
-    </div>
-    <MoreButton :goLink="'/classify'" />
-  </div>
+    </template>
+    <template #content>
+      <ul class="list">
+        <li v-for="item in 8" :key="item">
+          <router-link class="list-item" to="">
+            <span class="title">hexo</span>
+            <span class="num">2</span>
+          </router-link>
+        </li>
+      </ul>
+      <MoreButton goLink="/classify" />
+    </template>
+  </SideBlock>
 </template>
 
 <script>
+import SideBlock from './SideBlock.vue';
 import MoreButton from './MoreButton.vue';
 export default {
-  components: { MoreButton }
+  components: { SideBlock, MoreButton }
 };
 </script>
 
-<style>
-.category .category-list a {
-  width: 100%;
-  display: block;
+<style lang="scss" scoped>
+.list-item {
+  display: flex;
+  justify-content: space-between;
   padding: 3px 10px;
   transition: all 0.4s;
-}
-.category .category-list a:hover {
-  background: #1f2d3d;
-  color: #fff;
-  padding: 3px 17px;
-}
-.category .category-list a > span {
-  display: inline-block;
-}
-.category .category-list a > span:first-child {
-  width: 80%;
-}
-.category .category-list a > span:last-child {
-  width: 20%;
-  text-align: right;
+  &:hover {
+    background: $emphasize-black;
+    color: #fff;
+    padding: 3px 17px;
+  }
 }
 </style>
