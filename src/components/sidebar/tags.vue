@@ -10,7 +10,7 @@
     <template #content>
       <div>
         <router-link
-          :style="`--color:${$utils.randomColor('html', '#999')}`"
+          :style="`color:${$utils.color.randomColor('html', '#999')}`"
           class="tag"
           v-for="item in 6"
           :key="item"
@@ -27,13 +27,16 @@
 import SideBlock from './SideBlock.vue';
 
 export default {
-  components: { SideBlock }
+  components: { SideBlock },
+  created() {
+    window.that = this;
+    window.thatColor = this.$utils.color;
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .tag {
-  color: var(--color);
   font-size: 15.4px;
   padding: 0 4px;
   word-break: keep-all;
