@@ -25,7 +25,7 @@ export default {
     return {
       isUnfold: false,
       currentIndex: 1,
-      maxPage: 8
+      maxPage: 200
     };
   },
   computed: {
@@ -72,6 +72,7 @@ export default {
 $transition-time: 0.4s;
 .pagination {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   margin-top: 20px;
   font-size: 16px;
@@ -79,6 +80,7 @@ $transition-time: 0.4s;
   .item {
     height: 24px;
     min-width: 24px;
+    padding: 0 8px;
     margin: 0 4px;
     border-radius: 8px;
     text-align: center;

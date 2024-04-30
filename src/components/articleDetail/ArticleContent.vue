@@ -59,15 +59,20 @@
 </template>
 
 <script>
+import { debounce } from '@/utils/util';
 let tocDoms, articleObserver;
 export default {
   props: ['progress', 'tree', 'activeTitleID'],
   methods: {
     // 监听文章滚动的回调事件
-    handleArticleScroll(el) {
-      this.updateArticleProgress(el);
-      this.updateCurrentToc();
-    },
+    handleArticleScroll: debounce(
+      function (el) {
+        this.updateArticleProgress(el);
+        this.updateCurrentToc();
+      },
+      100,
+      true
+    ),
     // 设置当前阅读文章进度数，百分比
     updateArticleProgress(el) {
       let ratio = 0;
@@ -89,7 +94,7 @@ export default {
     // 设置当前阅读到的标题（h标签）
     updateCurrentToc() {
       const find = Array.from(tocDoms).findLast(el => {
-        return el.getBoundingClientRect().top <= 2;
+        return el.getBoundingClientRect().top <= 10;
       });
       const activeTitleID = find ? find.id : '';
       this.$emit('update:activeTitleID', activeTitleID);
@@ -119,6 +124,7 @@ export default {
         articleObserver.unobserve(el);
       }
     },
+    // 提取h标签生成目录树
     catalog: {
       bind(el, binding, vnode) {
         const that = vnode.context;

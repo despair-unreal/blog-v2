@@ -44,6 +44,7 @@ export default {
         { name: '归类', pageName: 'classify', src: '/classify', icon: 'icon-guanli' },
         { name: '随笔', pageName: 'essay', src: '/essay', icon: 'icon-jurassic_text' },
         { name: '留言', pageName: 'board', src: '/random', icon: 'icon-heiban' },
+        { name: '总览', pageName: 'articleOverview', src: '/articleOverview', icon: 'icon-yinle1' },
         { name: '音乐', pageName: 'music', src: '/music', icon: 'icon-yinle1' }
       ]
     };

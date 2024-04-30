@@ -18,7 +18,7 @@
 </script>
 <style lang='scss' scoped>
 .side-block {
-  @include sidebar;
+  @include block;
   .top {
     display: flex;
     align-items: center;

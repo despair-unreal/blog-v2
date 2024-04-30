@@ -24,11 +24,6 @@ const routes = [
         component: article
       },
       {
-        path: '/classify',
-        name: 'classify',
-        component: classify
-      },
-      {
         path: '/essay',
         name: 'essay',
         component: essay
@@ -49,6 +44,11 @@ const routes = [
     path: '/articleDetail',
     name: 'articleDetail',
     component: articleDetail
+  },
+  {
+    path: '/classify',
+    name: 'classify',
+    component: classify
   },
   {
     path: '/music',

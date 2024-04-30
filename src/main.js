@@ -4,7 +4,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 //自定义工具
-import utils from './utils/util';
+import * as utils from './utils/util';
 //字体
 import '@fontsource/montserrat/500.css';
 import '@fontsource/noto-sans-sc';

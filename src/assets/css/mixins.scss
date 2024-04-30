@@ -29,7 +29,7 @@
   @include card-box;
   padding: 50px 40px;
 }
-@mixin sidebar {
+@mixin block {
   @include card-box;
   padding: 20px 24px;
 }

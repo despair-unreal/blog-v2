@@ -40,7 +40,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .info {
-  @include sidebar;
+  @include block;
   .author {
     display: flex;
     flex-direction: column;
