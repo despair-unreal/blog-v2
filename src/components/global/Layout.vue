@@ -1,10 +1,10 @@
-<!-- 布局 top插槽为空时为mid加上上边距 -->
+<!-- 布局 -->
 <template functional>
   <div>
     <div class="top">
       <slot name="top"></slot>
     </div>
-    <div class="mid" :class="{ margin: !$slots.top || $slots.top.length === 0 }">
+    <div class="mid">
       <main class="left">
         <slot name="main"></slot>
       </main>
@@ -21,18 +21,16 @@ export default {};
 
 <style lang="scss" scoped>
 $max-width: 900px;
+.top {
+  min-height: 110px;
+}
 .mid {
-  max-width: 1200px;
+  max-width: 1476px;
   display: flex;
-  padding: 0 15px;
   margin: {
-    // top: 110px;
     bottom: 40px;
     left: auto;
     right: auto;
-  }
-  &.margin {
-    margin-top: 110px;
   }
   @media screen and (max-width: $max-width) {
     flex-direction: column;
