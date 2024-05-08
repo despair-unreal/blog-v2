@@ -18,9 +18,6 @@
   border-radius: 12px;
   box-shadow: 0 3px 8px 6px $block-shadow;
   transition: all 0.3s;
-  &:not(:first-child) {
-    margin-top: 20px;
-  }
   &:hover {
     box-shadow: 0 3px 8px 6px $block-shadow-hover;
   }

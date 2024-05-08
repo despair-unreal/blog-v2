@@ -38,6 +38,9 @@ export default {
 $max-width: 768px;
 .list-item {
   @include card-box;
+  &:not(:first-child) {
+    margin-top: 20px;
+  }
   display: flex;
   align-items: center;
   width: 100%;

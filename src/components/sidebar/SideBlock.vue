@@ -19,6 +19,9 @@
 <style lang='scss' scoped>
 .side-block {
   @include block;
+  &:not(:first-child) {
+    margin-top: 20px;
+  }
   .top {
     display: flex;
     align-items: center;

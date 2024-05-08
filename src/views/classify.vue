@@ -1,15 +1,20 @@
 <!-- 归类页 -->
 <template>
-  <div class="classify">
-    <ItemsTotal />
-    <CategoryEcharts />
-    <PostEcharts />
-    <Category />
-    <Tags />
-  </div>
+  <Layout>
+    <template #main>
+      <div class="classify">
+        <ItemsTotal />
+        <CategoryEcharts />
+        <PostEcharts />
+        <Category />
+        <Tags />
+      </div>
+    </template>
+  </Layout>
 </template>
 
 <script>
+import Layout from '@/components/global/Layout.vue';
 import ItemsTotal from '@/components/classify/ItemsTotal.vue';
 import CategoryEcharts from '@/components/classify/CategoryEcharts.vue';
 import PostEcharts from '@/components/classify/PostEcharts.vue';
@@ -18,6 +23,7 @@ import Tags from '@/components/classify/Tags.vue';
 
 export default {
   components: {
+    Layout,
     ItemsTotal,
     CategoryEcharts,
     PostEcharts,
@@ -29,32 +35,28 @@ export default {
 
 <style lang="scss" scoped>
 $max-width: 768px;
-$block-interval: 24px;
 .classify {
-  display: flex;
-  margin: 0 auto;
-  flex-wrap: wrap;
-  margin-top: 110px;
-  max-width: 1500px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: min-content;
+  gap: 40px 24px;
+  width: 100%;
   font-size: 16px;
+  @media screen and (max-width: $max-width) {
+    grid-template-columns: 1fr;
+  }
   .echarts {
     min-height: 400px;
+    min-width: 0;
+  }
+  .items-total {
+    grid-column: 1 / -1;
   }
   .echarts,
   .category,
   .tags,
   .items-total ::v-deep .item {
     @include block;
-    margin: 20px calc(#{$block-interval} / 2);
-    --block-interval: #{$block-interval};
-  }
-  .echarts,
-  .category,
-  .tags {
-    width: calc(50% - #{$block-interval});
-    @media screen and (max-width: $max-width) {
-      width: 100%;
-    }
   }
 }
 </style>

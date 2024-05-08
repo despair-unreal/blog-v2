@@ -33,14 +33,14 @@ export default {};
 </script>
 <style lang='scss' scoped>
 .items-total {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
   flex-wrap: wrap;
-  width: 100%;
+  @media screen and (max-width: 768px) {
+    grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+  }
   .item {
-    width: calc(25% - var(--block-interval));
-    @media screen and (max-width: 768px) {
-      width: calc(50% - var(--block-interval));
-    }
     .description {
       display: flex;
       flex-direction: column;

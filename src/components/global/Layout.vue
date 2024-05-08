@@ -25,30 +25,34 @@ $max-width: 900px;
   min-height: 110px;
 }
 .mid {
-  max-width: 1476px;
+  // max-width: 1476px;
   display: flex;
+  padding: 0 26px;
   margin: {
     bottom: 40px;
-    left: auto;
-    right: auto;
   }
   @media screen and (max-width: $max-width) {
     flex-direction: column;
-    > * {
-      width: 100% !important;
+    padding: 0 15px;
+    .left,
+    .right {
+      width: 100%;
     }
-    > *:not(:first-child) {
+    .right {
       margin-top: 20px;
     }
   }
   .left {
-    width: 75%;
+    flex: 1;
   }
   .right {
-    width: 25%;
-    margin-left: 15px;
-    @media screen and (max-width: $max-width) {
-      margin-left: 0px;
+    &:not(:empty) {
+      width: 25%;
+      margin-left: 20px;
+      @media screen and (max-width: $max-width) {
+        width: 100%;
+        margin-left: 0px;
+      }
     }
   }
 }
