@@ -18,7 +18,9 @@ const map = {
   link: 'icon-lianjie',
   list: 'icon-liebiao',
   github: 'icon-github-fill',
-  tags: 'icon-24gf-tags'
+  tags: 'icon-24gf-tags',
+  thumbsUp: 'icon-dianzan',
+  comments: 'icon-pinglun'
 };
 export default {
   functional: true,

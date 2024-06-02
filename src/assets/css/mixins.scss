@@ -30,3 +30,8 @@
   @include card-box;
   padding: 20px 24px;
 }
+@mixin text-background($bg) {
+  background: $bg;
+  -webkit-background-clip: text; /*将设置的背景颜色限制在文字中*/
+  -webkit-text-fill-color: transparent; /*给文字设置成透明*/
+}
